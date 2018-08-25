@@ -1,0 +1,26 @@
+---
+title: "Welcome to Introductory Stats"
+author: Joyce Cahoon
+#date: 
+output: beamer_presentation
+header-includes:
+- \usetheme{NCSUstatJL}
+- \usepackage[english]{babel}
+- \usepackage{inputenc}
+- \usepackage{times}
+- \usepackage[T1]{fontenc}
+- \usepackage{booktabs}
+- \usepackage{setspace}
+- \usepackage{bbm}
+- \usepackage{bm}
+- \usepackage{natbib}
+- \usepackage{inputenc}
+- \usepackage{graphicx}
+- \usepackage{ulem}
+- \graphicspath{{./figures/}}
+- \setbeamertemplate{itemize/enumerate subbody begin}{\vspace{.10cm}}
+- \setstretch{1.1} 
+---
+
+In Oct 9 or 11, you will present the literature review to the class. Each presentation will be about 12 minutes, with 1-3 minutes for discussion. This presentation slides should be a concise, professional presentation in PowerPoint or PDF that includes: Title of paper being reviewed, Introduction, goals of paper, methods and results, Future work (What needs to be done next? What improvements can
+be made?)
