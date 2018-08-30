@@ -93,7 +93,7 @@
   
   
   
-  \author{\Large \vspace{0.05in} \newline\normalsize\emph{}  }
+  \author{\Large Joyce Yu Cahoon\vspace{0.05in} \newline\normalsize\emph{}  }
   
   
   \date{}
@@ -132,7 +132,7 @@
 \makeatother
 \hypersetup{breaklinks=true,
 bookmarks=true,
-pdfauthor={ ()},
+pdfauthor={Joyce Yu Cahoon ()},
 pdfkeywords = {},  
 pdftitle={Homework 1},
 colorlinks=true,
@@ -164,6 +164,8 @@ pdfborder={0 0 0}}
 \usepackage{bm}
 \usepackage{framed}
 \usepackage{xcolor}
+\let\oldquote=\quote
+\let\endoldquote=\endquote
 \colorlet{shadecolor}{orange!15}
 
 
@@ -187,7 +189,7 @@ pdfborder={0 0 0}}
 
 {
   \vskip 13.5pt\relax \normalsize\fontsize{11}{12} 
-  \textbf{\authorfont } \hskip 15pt \emph{\small }   
+  \textbf{\authorfont Joyce Yu Cahoon} \hskip 15pt \emph{\small }   
   
 }
 
@@ -201,26 +203,12 @@ pdfborder={0 0 0}}
 \vskip 6.5pt
 
 
-\noindent  1.1
+\noindent  \hypertarget{section}{%
+\section{1.1}\label{section}}
 
 Download the daily, weekly and monthly prices for the Nasdaq index and
 the IBM stock from Yahoo. Reproduce figures 1.3-8 using the Nasdaq index
-and the IBM stock data. For 1.1, using the data from Jan 1985 - Aug
-2018.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Download the data}
-\KeywordTok{library}\NormalTok{(quantmod)}
-\CommentTok{# start <- as.Date("1985-01-01")}
-\CommentTok{# end <- as.Date("2018-08-29")}
-\CommentTok{# getSymbols("^IXIC", src = "yahoo", from = start, to = end)}
-\CommentTok{# getSymbols("IBM", src = "yahoo", from = start, to = end)}
-\CommentTok{# save to avoid reloading }
-\CommentTok{# saveRDS(IXIC, "~/workspace/st790-financial-stats/data/ixic.rds")}
-\CommentTok{# saveRDS(IBM, "~/workspace/st790-financial-stats/data/ibm.rds")}
-\end{Highlighting}
-\end{Shaded}
+and the IBM stock data.
 
 For NASDAQ:
 
@@ -248,6 +236,55 @@ For NASDAQ:
 
 \includegraphics{hw1_files/figure-latex/unnamed-chunk-3-1.pdf}
 
+Histograms for NASDAQ:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\KeywordTok{hist}\NormalTok{(daily, }\DataTypeTok{probability=}\NormalTok{T, }\DataTypeTok{nclass=}\DecValTok{35}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{''}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Daily returns"}\NormalTok{)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.01}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(x, }\KeywordTok{dnorm}\NormalTok{(x, }\KeywordTok{mean}\NormalTok{(daily), }\KeywordTok{sd}\NormalTok{(daily)), }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(weekly, }\DataTypeTok{probability=}\NormalTok{T, }\DataTypeTok{nclass=}\DecValTok{40}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{''}\NormalTok{, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{,}
+\DataTypeTok{main=}\StringTok{"Weekly returns"}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(x, }\KeywordTok{dnorm}\NormalTok{(x, }\KeywordTok{mean}\NormalTok{(weekly), }\KeywordTok{sd}\NormalTok{(weekly)), }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(monthly, }\DataTypeTok{probability=}\NormalTok{T, }\DataTypeTok{nclass=}\DecValTok{30}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{''}\NormalTok{, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{, }\DataTypeTok{main=}\StringTok{"Monthly returns"}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(x, }\KeywordTok{dnorm}\NormalTok{(x, }\KeywordTok{mean}\NormalTok{(monthly), }\KeywordTok{sd}\NormalTok{(monthly)), }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\CommentTok{# now add in qq plots}
+\KeywordTok{qqnorm}\NormalTok{(daily,}\DataTypeTok{xlab=}\StringTok{'Normal quantile'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Quantile of daily returns'}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"brown"}\NormalTok{)}
+\KeywordTok{qqline}\NormalTok{(daily, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{qqnorm}\NormalTok{(weekly,}\DataTypeTok{xlab=}\StringTok{'Normal quantile'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Quantile of weekly returns'}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"brown"}\NormalTok{)}
+\KeywordTok{qqline}\NormalTok{(weekly, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{qqnorm}\NormalTok{(monthly,}\DataTypeTok{xlab=}\StringTok{'Normal quantile'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Quantile of monthly returns'}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"brown"}\NormalTok{)}
+\KeywordTok{qqline}\NormalTok{(monthly, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw1_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+Autocorrelations for NASDAQ:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{), }\DataTypeTok{mgp=}\KeywordTok{c}\NormalTok{(}\FloatTok{1.8}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\DecValTok{0}\NormalTok{)) }
+
+\KeywordTok{acf}\NormalTok{(daily,  }\DataTypeTok{main=}\StringTok{'Daily returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(weekly, }\DataTypeTok{main=}\StringTok{'Weekly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(monthly, }\DataTypeTok{main=}\StringTok{'Monthly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(daily}\OperatorTok{*}\NormalTok{daily, }\DataTypeTok{main=}\StringTok{'Squared daily returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(weekly}\OperatorTok{*}\NormalTok{weekly, }\DataTypeTok{main=}\StringTok{'Squared weekly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(monthly}\OperatorTok{*}\NormalTok{monthly, }\DataTypeTok{main=}\StringTok{'Squared monthly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(}\KeywordTok{abs}\NormalTok{(daily), }\DataTypeTok{main=}\StringTok{'Absolute daily returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(}\KeywordTok{abs}\NormalTok{(weekly),  }\DataTypeTok{main=}\StringTok{'Absolute weekly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(}\KeywordTok{abs}\NormalTok{(monthly), }\DataTypeTok{main=}\StringTok{'Absolute monthly returns'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw1_files/figure-latex/unnamed-chunk-5-1.pdf}
+
 For IBM:
 
 \begin{Shaded}
@@ -269,38 +306,212 @@ For IBM:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{hw1_files/figure-latex/unnamed-chunk-4-1.pdf}
+\includegraphics{hw1_files/figure-latex/unnamed-chunk-6-1.pdf}
 
-1.3 Consider the following quote from Eugene Fama who was Myron Scholes'
+Histograms for IBM:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\KeywordTok{hist}\NormalTok{(daily, }\DataTypeTok{probability=}\NormalTok{T, }\DataTypeTok{nclass=}\DecValTok{35}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{''}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Daily returns"}\NormalTok{)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.01}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(x, }\KeywordTok{dnorm}\NormalTok{(x, }\KeywordTok{mean}\NormalTok{(daily), }\KeywordTok{sd}\NormalTok{(daily)), }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(weekly, }\DataTypeTok{probability=}\NormalTok{T, }\DataTypeTok{nclass=}\DecValTok{40}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{''}\NormalTok{, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{,}
+\DataTypeTok{main=}\StringTok{"Weekly returns"}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(x, }\KeywordTok{dnorm}\NormalTok{(x, }\KeywordTok{mean}\NormalTok{(weekly), }\KeywordTok{sd}\NormalTok{(weekly)), }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(monthly, }\DataTypeTok{probability=}\NormalTok{T, }\DataTypeTok{nclass=}\DecValTok{30}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{''}\NormalTok{, }\DataTypeTok{col=}\StringTok{"orange"}\NormalTok{, }\DataTypeTok{main=}\StringTok{"Monthly returns"}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(x, }\KeywordTok{dnorm}\NormalTok{(x, }\KeywordTok{mean}\NormalTok{(monthly), }\KeywordTok{sd}\NormalTok{(monthly)), }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\CommentTok{# now add in qq plots}
+\KeywordTok{qqnorm}\NormalTok{(daily,}\DataTypeTok{xlab=}\StringTok{'Normal quantile'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Quantile of daily returns'}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"brown"}\NormalTok{)}
+\KeywordTok{qqline}\NormalTok{(daily, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{qqnorm}\NormalTok{(weekly,}\DataTypeTok{xlab=}\StringTok{'Normal quantile'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Quantile of weekly returns'}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"brown"}\NormalTok{)}
+\KeywordTok{qqline}\NormalTok{(weekly, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{qqnorm}\NormalTok{(monthly,}\DataTypeTok{xlab=}\StringTok{'Normal quantile'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Quantile of monthly returns'}\NormalTok{,}
+\DataTypeTok{col=}\StringTok{"brown"}\NormalTok{)}
+\KeywordTok{qqline}\NormalTok{(monthly, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw1_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+Autocorrelations for IBM:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{), }\DataTypeTok{mgp=}\KeywordTok{c}\NormalTok{(}\FloatTok{1.8}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\DecValTok{0}\NormalTok{)) }
+
+\KeywordTok{acf}\NormalTok{(daily,  }\DataTypeTok{main=}\StringTok{'Daily returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(weekly, }\DataTypeTok{main=}\StringTok{'Weekly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(monthly, }\DataTypeTok{main=}\StringTok{'Monthly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(daily}\OperatorTok{*}\NormalTok{daily, }\DataTypeTok{main=}\StringTok{'Squared daily returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(weekly}\OperatorTok{*}\NormalTok{weekly, }\DataTypeTok{main=}\StringTok{'Squared weekly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(monthly}\OperatorTok{*}\NormalTok{monthly, }\DataTypeTok{main=}\StringTok{'Squared monthly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(}\KeywordTok{abs}\NormalTok{(daily), }\DataTypeTok{main=}\StringTok{'Absolute daily returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(}\KeywordTok{abs}\NormalTok{(weekly),  }\DataTypeTok{main=}\StringTok{'Absolute weekly returns'}\NormalTok{)}
+\KeywordTok{acf}\NormalTok{(}\KeywordTok{abs}\NormalTok{(monthly), }\DataTypeTok{main=}\StringTok{'Absolute monthly returns'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw1_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\hypertarget{section-1}{%
+\section{1.3}\label{section-1}}
+
+Consider the following quote from Eugene Fama who was Myron Scholes'
 thesis adviser: ``If the population of prices changes is strictly
 normal, on the average for any stock\ldots{} an observation more than 5
 standard deviations from the mean should be observed once every 7000
 years. In fact such observations seem to occur about once every 3 or 5
 years.'' For
 \(X \sim N(\mu, \sigma^2), P(|X-\mu| > 5\sigma) = 5.733 \times 10^{-7}\),
-deduce how many observations per year Fama was implicitly assumining to
-be made. If a year is defined as 252 trading days and daily returns are
+deduce how many observations per year Fama was implicitly assuming to be
+made. If a year is defined as 252 trading days and daily returns are
 normal, how many years is it expected to take to get a 5 standard
 deviation event? How does this answwer to the last question change when
 the daily returns follow the t-distribution with 4 degrees of freedom?
 
-1.8 According to the efficient market hypothesis, is the return of a
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"The probability of getting this shock is 1 out of "}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{/}\NormalTok{(}\FloatTok{5.7333}\OperatorTok{*}\FloatTok{10e-7}\NormalTok{), }\StringTok{" days or "}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\NormalTok{(}\FloatTok{5.7333}\OperatorTok{*}\FloatTok{10e-7}\NormalTok{)}\OperatorTok{/}\DecValTok{252}\NormalTok{, }\StringTok{" years"}\NormalTok{, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The probability of getting this shock is 1 out of  174419.6  days or  692.1413  years
+\end{verbatim}
+
+To get \(P(Z < -5)\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p <-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{) }
+\KeywordTok{cat}\NormalTok{(}\StringTok{"The probability of getting this shock is 1 out of "}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{/}\NormalTok{p, }\StringTok{" days or "}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\NormalTok{p}\OperatorTok{/}\DecValTok{252}\NormalTok{, }\StringTok{" years"}\NormalTok{, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The probability of getting this shock is 1 out of  3488556  days or  13843.48  years
+\end{verbatim}
+
+When the daily returns follow a \(t\)-distribution with 4 df:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p <-}\StringTok{ }\KeywordTok{pt}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{, }\DataTypeTok{df =} \DecValTok{4}\NormalTok{) }
+\KeywordTok{cat}\NormalTok{(}\StringTok{"The probability of getting this shock is 1 out of "}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{/}\NormalTok{p, }\StringTok{" days or "}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\NormalTok{p}\OperatorTok{/}\DecValTok{252}\NormalTok{, }\StringTok{" years"}\NormalTok{, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The probability of getting this shock is 1 out of  267.0072  days or  1.059552  years
+\end{verbatim}
+
+\hypertarget{section-2}{%
+\section{1.8}\label{section-2}}
+
+According to the efficient market hypothesis, is the return of a
 portfolio predictable? Is the volatility of a portfolio predictable?
 State the most appropriate mathematical form of the efficient market
 hypothesis.
 
-1.9 If the Ljung-Box test is employed to test the efficient market
+\begin{quote}
+By EMH, return of a portfolio is not predictable. The volatility is
+predictable since on average it is assumed that the average change in
+log price reaches the expectation \(\mu_t\). In other words, our asset
+return process can be expressed as: \[
+r_t = \mu_t + \epsilon_t \quad \epsilon_t \sim (0, \sigma_t^2)
+\] where \(\mu_t\) is the rational expectation of the return \(r_t\) at
+time \(t-1\) and \(\epsilon_t\) is the return due to unpredictable news
+that arrives between \(t-1\) and \(t\). The EMH holds when: \[
+E(r_t | r_{t-1}, r_{t-2}, \ldots) = E(r_t) \quad \text{almost surely}
+\] In other words, \(r_t - \mu_t\) is a martingale difference with
+respect the information available up to \(t-1\).
+\end{quote}
+
+\hypertarget{section-3}{%
+\section{1.9}\label{section-3}}
+
+If the Ljung-Box test is employed to test the efficient market
 hypothesis, what null hypothesis is to be tested? If the autocorrelation
-for the first 4 lags of the montly log-returns of the S\&P500 is:
+for the first 4 lags of the monthly log-returns of the S\&P500 is:
 
 \[
 \hat{\rho}(1) = .2, \quad \hat{\rho}(2) = -0.15, \quad \hat{\rho}(3) = 0.25, \quad \hat{\rho}(4) = 0.12
-\] based on the last 5 years of data, is the efficient market hypothesis
+\]
+
+based on the last 5 years of data, is the efficient market hypothesis
 reasonable?
 
-1.13 Let \(S_t\) be the price of an asset at time \(t\). One version of
-the EMH assumes that the prices of any asset form a martingale process
-in the sense that:
+\begin{quote}
+The null hypothesis tested is whether \(r_t\) is a white noise process.
+The efficient market hypothesis is reasonable as shown below; we cannot
+reject the white noise hypothesis for the log return data.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Qm <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(t, rho, m)\{}
+\NormalTok{  temp <-}\StringTok{ }\DecValTok{0}
+  \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{m)\{}
+\NormalTok{    temp <-}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{(t}\OperatorTok{-}\NormalTok{j))}\OperatorTok{*}\NormalTok{rho[j]}\OperatorTok{^}\DecValTok{2}
+\NormalTok{  \}}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{t}\NormalTok{(t}\OperatorTok{+}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\NormalTok{temp)}
+\NormalTok{\}}
+\CommentTok{# feed in different m, find the P(Q > Qm)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"When m = 1, the P( Q > Qm) is :"}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{-}\KeywordTok{pchisq}\NormalTok{(}\KeywordTok{Qm}\NormalTok{(}\DecValTok{60}\NormalTok{, }\KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, }\FloatTok{-0.15}\NormalTok{, }\FloatTok{.25}\NormalTok{, }\FloatTok{.12}\NormalTok{), }\DecValTok{1}\NormalTok{), }\DataTypeTok{df =} \DecValTok{1}\NormalTok{), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## When m = 1, the P( Q > Qm) is : 0.8375552
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"When m = 2, the P( Q > Qm) is :"}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{-}\KeywordTok{pchisq}\NormalTok{(}\KeywordTok{Qm}\NormalTok{(}\DecValTok{60}\NormalTok{, }\KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, }\FloatTok{-0.15}\NormalTok{, }\FloatTok{.25}\NormalTok{, }\FloatTok{.12}\NormalTok{), }\DecValTok{2}\NormalTok{), }\DataTypeTok{df =} \DecValTok{2}\NormalTok{), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## When m = 2, the P( Q > Qm) is : 0.9674971
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"When m = 3, the P( Q > Qm) is :"}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{-}\KeywordTok{pchisq}\NormalTok{(}\KeywordTok{Qm}\NormalTok{(}\DecValTok{60}\NormalTok{, }\KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, }\FloatTok{-0.15}\NormalTok{, }\FloatTok{.25}\NormalTok{, }\FloatTok{.12}\NormalTok{), }\DecValTok{3}\NormalTok{), }\DataTypeTok{df =} \DecValTok{3}\NormalTok{), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## When m = 3, the P( Q > Qm) is : 0.9874569
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"When m = 4, the P( Q > Qm) is :"}\NormalTok{, }
+    \DecValTok{1}\OperatorTok{-}\KeywordTok{pchisq}\NormalTok{(}\KeywordTok{Qm}\NormalTok{(}\DecValTok{60}\NormalTok{, }\KeywordTok{c}\NormalTok{(.}\DecValTok{2}\NormalTok{, }\FloatTok{-0.15}\NormalTok{, }\FloatTok{.25}\NormalTok{, }\FloatTok{.12}\NormalTok{), }\DecValTok{4}\NormalTok{), }\DataTypeTok{df =} \DecValTok{4}\NormalTok{), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## When m = 4, the P( Q > Qm) is : 0.9973239
+\end{verbatim}
+
+\hypertarget{section-4}{%
+\section{1.13}\label{section-4}}
+
+Let \(S_t\) be the price of an asset at time \(t\). One version of the
+EMH assumes that the prices of any asset form a martingale process in
+the sense that:
 
 \[
 E(S_{t+1}|S_t, S_{t-1}, \ldots ) = S_t \quad \forall t
@@ -321,6 +532,20 @@ and our investment strategy is entirely determined by the asset prices
 up to the time \(t\). Show that if \(S_t\) is a martingale process,
 there exist no strategies such that \(C_{t+1} > C_t\) with probability
 1.
+
+\begin{quote}
+Given that
+\(\alpha_t + \beta_t S_{t+1} = \alpha_{t+1} + \beta_{t+1} S_{t+1}\) must
+hold and the fact that this portfolio is self-financing, we can assume
+that \(C_t = \alpha_t + \beta_t S_t\). Thus, when the portfolio is
+updated: \[
+C_{t+1} -C_t = \beta_t (S_{t+1} - S{t})
+\] and \[
+E_t[C_{t+1} -C_t] = \beta_t[E(S_{t+1}) - S_t] = 0
+\] Since, \(E_t(S_{t+1}) = S_t\) is a martingale process. Therefore, it
+is not possible to find a strategy ensuring a strictly positive net
+return with probability 1.
+\end{quote}
 \newpage
 \singlespacing 
 \end{document}
