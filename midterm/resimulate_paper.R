@@ -14,9 +14,9 @@ library(quantmod)
 
 # get the financial data  -------------------------------------------------
 # Portfolio rebalancing can exacerbate drawdowns during major trends, as in 2008-2009 and 2000-2002. 
-# start <- as.Date("2008-01-01")
-# end <- as.Date("2009-12-31")
-# getSymbols("SNP", src = "yahoo", from = start, to = end)
+start <- as.Date("2008-01-01")
+end <- as.Date("2009-12-31")
+getSymbols("SNP", src = "yahoo", from = start, to = end)
 # getSymbols("^TNX", src = "yahoo", from = start, to = end)
 # saveRDS(SNP, "data/SNP_0809.rds")
 # saveRDS(TNX, "data/TNX_0809.rds")
