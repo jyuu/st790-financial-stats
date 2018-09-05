@@ -33,6 +33,7 @@ library(png)
 # Introduction 
 
 ```{r, fig.cap="Typical IRA equity-bond mix"} 
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/split.png")
 ```
 
 
@@ -151,9 +152,17 @@ img2 <-  grid::rasterGrob(as.raster(readPNG(imgs[2])),
 grid.arrange(img1, img2, ncol = 2)
 ```
 
-# How it works 
+# How momentum works 
 
-High frequency momentum overlay reduce risks induced by rebalancing. The expected profit and loss of the strategy: 
+They utilized a proprietary moving-average cross-over system. But in general: 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="45%", fig.cap="Bullish and bearish signals from Emerson Electric arising from 50-day EMA and 200-day EMA. Source: Stock Charts."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/macd.png")
+```
+
+# How momentum works
+
+High frequency momentum overlay reduce risks induced by rebalancing. The expected profit and loss of the strategy:
 
 $$
 \mathbb{E}(PL| P_t) = Y_0 \psi(t) \Big[\log{\frac{P_t}{P_0}}^2 - \sigma^2 t \Big]
@@ -181,11 +190,13 @@ knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/
 knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_original.png")
 ```
 
-# 
+# Results
 
 > "Momentum overlay provides one way to maintain a good rebalancing schedule WITHOUT increasing the drawdown risk."
 # Future
 
+# Future 
 
-# Discussion
-- 
+- Use of different kinds of momentum overlay  
+
+# Discussion 
