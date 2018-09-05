@@ -1,0 +1,80 @@
+---
+title: "Rebalancing Risk"
+author:  Presenter`:` Joyce Cahoon 
+#Nick Granger, Doug Greenig, Campbell Harvey, Sandy Rattraya and David Zou
+# iaffiliation:
+#date: 
+output: beamer_presentation
+header-includes:
+- \usetheme{NCSUstatJL}
+- \usepackage[english]{babel}
+- \usepackage{inputenc}
+- \usepackage{times}
+- \usepackage[T1]{fontenc}
+- \usepackage{booktabs}
+- \usepackage{setspace}
+- \usepackage{bbm}
+- \usepackage{bm}
+- \usepackage{natbib}
+- \usepackage{inputenc}
+- \usepackage{graphicx}
+- \usepackage{ulem}
+- \graphicspath{{./figures/}}
+- \setbeamertemplate{itemize/enumerate subbody begin}{\vspace{.10cm}}
+- \setstretch{1.1} 
+---
+
+# Introduction 
+
+```{r, fig.cap="Typical IRA equity-bond mix"} 
+```
+
+
+# How rebalancing works
+
+- Start with buy-and-hold portfolio 
+- Add a short straddle (sell a call and put option)
+
+# Under ideal conditions
+
+- The conditions under which rebalancing returns.. when there is mean reversion 
+- when the price underperf
+
+# The problem 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="70%", fig.cap="Rebalancing magnified drawdowns. Source: Reuters."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/rebalancing.png")
+```
+
+# Characteristic return profile  
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Divergence in stock and bond returns results in negative convexity. Source: Reuters."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/rebalancing_2.png")
+```
+
+# A solution
+
+Leverage opposing return profile of momentum overlay.
+
+\begin{columns}
+	\begin{column}{.5\textwidth} 
+		\centering
+		\includegraphics[scale=.38]{momentum_c1}
+   	\end{column}  
+	\begin{column}{.5\textwidth}
+	  \centering
+		\includegraphics[scale=.38]{momentum_c2}
+	  \end{column}
+\end{columns}
+
+# Method 
+- High frequency momentum overlay reduce risks induced by rebalancing
+
+# Results
+
+# Future
+
+
+
+# Discussion
+- 
