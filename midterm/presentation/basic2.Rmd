@@ -1,0 +1,202 @@
+---
+title: "Rebalancing Risk"
+author:  Presenter`:` Joyce Cahoon 
+#Nick Granger, Doug Greenig, Campbell Harvey, Sandy Rattraya and David Zou
+# iaffiliation:
+#date: 
+output: beamer_presentation
+header-includes:
+- \usetheme{NCSUstatJL}
+- \usepackage[english]{babel}
+- \usepackage{inputenc}
+- \usepackage{times}
+- \usepackage[T1]{fontenc}
+- \usepackage{booktabs}
+- \usepackage{setspace}
+- \usepackage{bbm}
+- \usepackage{bm}
+- \usepackage{natbib}
+- \usepackage{inputenc}
+- \usepackage{graphicx}
+- \usepackage{ulem}
+- \graphicspath{{./figures/}}
+- \setbeamertemplate{itemize/enumerate subbody begin}{\vspace{.10cm}}
+- \setstretch{1.1} 
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(grid)
+library(gridExtra)
+library(png)
+```
+
+# Introduction 
+
+```{r, fig.cap="Typical IRA equity-bond mix"} 
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/split.png")
+```
+
+
+# How rebalancing works
+
+- Start with buy-and-hold portfolio 
+- Add a short straddle (sell a call and put option)
+
+# Under ideal conditions
+
+- The conditions under which rebalancing returns.. when there is mean reversion 
+- when the price underperf
+
+# The problem 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="70%", fig.cap="Rebalancing magnified drawdowns. Source: Reuters."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/rebalancing.png")
+```
+
+# Fixed-weight rebalance of one asset and cash
+
+If we model a single risky asset $P_t$ as follows: 
+
+$$
+\begin{gathered}
+\frac{dP_t}{P_t} = \sigma dW_t\\ 
+P_t = P_0 \exp{(\sigma W_t - \frac{1}{2}\sigma^2 t)}
+\end{gathered}
+$$
+
+And we started with wealth $X_t$ and invested a fixed percentage $m$ into our asset: 
+
+$$
+\frac{dX_t}{X_t} = m\frac{dP_t}{P_t}
+$$
+
+# Fixed-weight rebalance of one asset and cash
+
+Applying Ito's lemma, we will find that: 
+
+$$
+\begin{aligned}
+X_t &= X_0 \exp{(m\sigma W_t - \frac{1}{2} m^2 \sigma^2 t)} \\ 
+&= X_0 \Big(\frac{P_t}{P_0} \Big)^m \exp{(\frac{1}{2} (m-m^2)\sigma^2 t)} \\
+&\approx cX_0 \Big(\frac{P_t}{P_0} \Big)^m
+\end{aligned}
+$$
+
+# Fixed-weight rebalance of one asset and cash
+
+And a Taylor-series expansion of $X_t$ around $S_t = S_0$: 
+
+$$
+\begin{aligned}
+X_t &\approx cX_0 \Big[1 + m(\frac{P_t}{P_0}-1) + \frac{1}{2}m(m-1)(\frac{P_t}{P_0}-1)^2 + \text{remainder} \Big] \\ 
+\end{aligned}
+$$
+
+When $m <1$, we can easily see that our quadratic term has a negative coefficient, giving us the negative convexity property in our payoff profile. 
+
+# Expanding this into a two asset case 
+
+Using the same assumptions as before: 
+
+$$
+\begin{gathered}
+\frac{dS_t}{S_t} = \sigma_S dW_{S,t} \quad S_t = S_0 \exp{(\sigma_S W_{S,t} - \frac{1}{2}\sigma_S^2 t)}  \\
+\frac{dB_t}{B_t} = \sigma_B dW_{B,t} \quad B_t = B_0 \exp{(\sigma_B W_{B,t} - \frac{1}{2}\sigma_B^2 t)}  \\
+\end{gathered}
+$$
+
+# Fixed-weight rebalance of two assets
+
+Assuming the return correlation between the assets is $\rho$, our wealth at $t$ is then determined by: 
+
+$$
+\frac{dX_t}{X_t} = m\frac{dS_t}{S_t} + n \frac{dB_t}{B_t}
+$$
+
+Again, applying Ito's lemma, we arrive at: 
+ $$
+ \begin{aligned}
+ X_t &= X_t \exp{(m \sigma_S W_{S,t} + n \sigma_B W_{B,t} - \frac{1}{2}(m^2 \sigma_S^2 + n^2 \sigma_B^2 + 2 \rho m n \sigma_S \sigma_B) t }  \\ 
+ &\approx cX_0 \Big( \frac{S_t}{S_0} \Big)^m \Big( \frac{B_t}{B_0} \Big)^n 
+ \end{aligned}
+ $$
+
+# Fixed-weight rebalance of two assets
+
+Carrying out our Taylor series expansion, we'll find: 
+
+$$
+\frac{X_t}{X_0} \approx c\Big[ 1 + m\Big( \frac{P_t}{P_0} -1\Big)  +
+n\Big( \frac{B_t}{B_0} -1\Big)  + 
+\frac{1}{2}mn\Big( \frac{S_t}{S_0} -\frac{B_t}{B_0}\Big)^2 \Big]
+$$ 
+
+# Characteristic return profile  
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Divergence in stock and bond returns results in negative convexity. Source: Reuters."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/rebalancing_2.png")
+```
+
+# A solution
+
+Leverage opposing return profile of momentum overlay.
+
+```{r, echo = FALSE, message = FALSE}
+imgs <- c("~/workspace/st790-financial-stats/midterm/presentation/momentum_c1.png", 
+          "~/workspace/st790-financial-stats/midterm/presentation/momentum_c2.png")
+img1 <-  grid::rasterGrob(as.raster(readPNG(imgs[1])),
+                            interpolate = FALSE)
+img2 <-  grid::rasterGrob(as.raster(readPNG(imgs[2])),
+                            interpolate = FALSE)
+
+grid.arrange(img1, img2, ncol = 2)
+```
+
+# How momentum works 
+
+They utilized a proprietary moving-average cross-over system. But in general: 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="45%", fig.cap="Bullish and bearish signals from Emerson Electric arising from 50-day EMA and 200-day EMA. Source: Stock Charts."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/macd.png")
+```
+
+# How momentum works
+
+High frequency momentum overlay reduce risks induced by rebalancing. The expected profit and loss of the strategy:
+
+$$
+\mathbb{E}(PL| P_t) = Y_0 \psi(t) \Big[\log{\frac{P_t}{P_0}}^2 - \sigma^2 t \Big]
+$$
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Cumulative return of assets with fixed-weight rebalancing and momentum overlay. Source: Man Group."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_overlay.png")
+```
+
+# Tracks the desired long-term allocation 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Allocation differences under fixed weight rebalancing, with and without momentum overlay. Source: Man Group."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_overlay_equities.png")
+```
+
+# Improves performance 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Cumulative returns of a fixed portfolio against one with momentum overlay. Source: Man Group."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_cul.png")
+```
+
+# Compared to our original 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Impact of momentum overlay between 2008 and 2010 period. Source: Man Group."}
+knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_original.png")
+```
+
+# Results
+
+> "Momentum overlay provides one way to maintain a good rebalancing schedule WITHOUT increasing the drawdown risk."
+# Future
+
+# Future 
+
+- Use of different kinds of momentum overlay  
+
+# Discussion 

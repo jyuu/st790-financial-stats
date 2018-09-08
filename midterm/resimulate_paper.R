@@ -14,9 +14,11 @@ library(quantmod)
 
 # get the financial data  -------------------------------------------------
 # Portfolio rebalancing can exacerbate drawdowns during major trends, as in 2008-2009 and 2000-2002. 
+
 # start <- as.Date("2008-01-01")
 # end <- as.Date("2009-12-31")
 # getSymbols("SNP", src = "yahoo", from = start, to = end)
+
 # getSymbols("^TNX", src = "yahoo", from = start, to = end)
 # saveRDS(SNP, "data/SNP_0809.rds")
 # saveRDS(TNX, "data/TNX_0809.rds")
@@ -38,6 +40,73 @@ lines(as.numeric(tnx2)) # obviously very different
 #candleChart(TNX1, up.col = "black", dn.col = "red", theme = "white")
 SNP1 <- readRDS("data/SNP_0002.rds")
 snp1 <- SNP1$SNP.Open
+
+
+# demo drawdowns ----------------------------------------------------------
+library(PerformanceAnalytics)
+snp.roc <- ROC(snp1,n=1,type="discrete")
+snp.draw <- Drawdowns(snp.roc)
+plot.zoo(log(snp1),plot.type="single",
+         col=c(2,3,4),ylab="log Price",xlab=NA,main="Dow Jones Indexes")
+drawdowns <- table.Drawdowns(snp.roc[,1])
+drawdowns.dates <- cbind(format(drawdowns$From),format(drawdowns$To))
+drawdowns.dates[is.na(drawdowns.dates)] <- format(index(DJ.roc)[NROW(DJ.roc)])
+chart.Drawdown(SNP1)
+
+
+# demo cumulative returns -------------------------------------------------
+data(managers)
+test <- Return.cumulative(managers[,1,drop=FALSE])
+test <- Return.cumulative(managers[,1:8])
+test <- Return.cumulative(managers[,1:8],geometric=FALSE) 
+test <- Return.cumulative(snp1)
+
+
+# plot of cumulative return with drift ------------------------------------
+SNP <- readRDS("data/SNP_0809.rds")
+TNX <- readRDS("data/TNX_0809.rds")
+snp <- SNP$SNP.Close
+tnx <- TNX$TNX.Close
+s <- monthlyReturn(snp)
+t <- monthlyReturn(tnx)
+cs <- cumprod(1+s)-1
+ts <- cumprod(1+t)-1
+
+# for a portfolio that maintained the 60/40 split each month
+port <- .6*s + .4*t
+port.cumreturn <- cumprod(port+1)-1
+# for a portfolio that allowed drift from initial investment 
+drift <- .6*cs + .4*ts
+# viz 
+plot(port.cumreturn)
+lines(drift)
+
+# another way to calculate the returns  -----------------------------------
+library(TTR)
+# example of equal weighted portfolio everyday 
+start <- as.Date("2008-01-01")
+end <- as.Date("2010-12-31")
+symbols <- c("SNP", "^TNX")
+getSymbols(symbols, src = 'yahoo', from = start, to = end)
+closing.prices <- merge.xts(SNP[,4], TNX[,4])["2008-01-02/"]
+price.returns <- ROC(closing.prices)
+drift <- round(Return.portfolio(price.returns), 4)
+d <- cumsum(drift)
+fixed <- round(Return.rebalancing(price.returns, rebalance_on = "months"), 4)
+f <- cumsum(fixed)
+plot(f)
+
+# another way to do rebalancing  ------------------------------------------
+data(edhec)
+data(weights)
+round(Return.portfolio(edhec), 4)
+round(Return.portfolio(edhec, contribution = TRUE), 4)
+round(Return.rebalancing(edhec, weights, rebalance_on = "years"), 4)
+
+symbols <- c("GOOG", "AMZN", "FB", "AAPL")
+getSymbols(symbols, src = 'yahoo')
+closing.prices <- merge.xts(GOOG[,4], AMZN[,4], FB[,4], AAPL[,4])["2016-12-30/"]
+price.returns <- ROC(snp)
 
 # show allocation in port weight ------------------------------------------
 w1 <- .6 # for stocks 
