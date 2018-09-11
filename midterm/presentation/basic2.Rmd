@@ -193,6 +193,7 @@ knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/
 # Results
 
 > "Momentum overlay provides one way to maintain a good rebalancing schedule WITHOUT increasing the drawdown risk."
+
 # Future
 
 # Future 

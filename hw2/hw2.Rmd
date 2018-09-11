@@ -1,0 +1,103 @@
+---
+output: 
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    template: ~/workspace/cv/git/svm-latex-ms.tex
+title: "Homework 2"
+author: 
+  name: "Joyce Yu Cahoon"
+#abstract: "Application of sequential monte carlo (SMC) to the development of IM plausibility functions for the Nile."
+# bibliography: /Users/jcahoon/workspace/metar/ref.bib
+#bibliography: /home/joyce/workspace/metar/ref.bib
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+# spacing: double
+endnote: no
+header-includes:
+- \setlength{\abovedisplayskip}{.2pt}
+- \setlength{\belowdisplayskip}{.2pt}
+- \usepackage{placeins}
+- \usepackage{setspace}
+- \usepackage{chngcntr}
+- \usepackage{multicol}
+- \usepackage{lscape}
+- \counterwithin{figure}{section}
+- \counterwithin{table}{section}
+- \usepackage{mathrsfs}
+- \usepackage{mathtools}
+- \usepackage{multirow}
+- \newtheorem{theorem}{Theorem}
+- \usepackage[linesnumbered,algoruled,boxed,lined,commentsnumbered]{algorithm2e} 
+- \usepackage{bm}
+- \usepackage{framed}
+- \usepackage{xcolor}
+- \let\oldquote=\quote
+- \let\endoldquote=\endquote
+- \colorlet{shadecolor}{orange!15}
+- \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
+- \newcommand{\V}[1]{{\bm{\mathbf{\MakeLowercase{#1}}}}}
+--- 
+
+# 5.2 
+
+Let $s_A$ and $s_B$ be the Sharpe ratio of portfolios A and B. Let $r_A$ and $r_B$ be the expected returns of these two portfolios, with standard deviation denoted by $\sigma_A$ and $\sigma_B$. Assume that through self financing, portfolio A borrows ($\sigma_B/\sigma_A-1$) at risk-free rate $r_f$ to leverage so that its risk is now the same as that of portfolio B. 
+
+Show that the excess return of leveraged investment in portfolio A is larger than the expected return of portfolio B if $s_A > s_B$. This shows that the Sharpe ratio measures the efficiency of a portfolio. 
+
+
+# 5.3 
+
+Suppose that three mutual funds (conservative, growth and aggressive) have annual log-returns of 15\%, 20\% and 30\% with volatility of 20\%, 30\% and 50\% respectively. The correlation between any of the 2 funds is 0 and the risk-free rate is 5\%.  
+
+```{r}
+rf <- .05
+vol <- c(.20, .30, .50)
+r <- c(.15, .20, .30) 
+expected_return <- .15 
+Y <- r - rf # excess returns 
+gamma <- diag(x = 1, nrow = 3) 
+vol <- diag(vol, nrow = 3) 
+Sigma <- vol %*% gamma %*% vol
+partial_alpha <- as.vector(solve(Sigma) %*% Y ) 
+A <- sum(partial_alpha * Y)/(expected_return - rf)
+a.est <- 1/A*solve(Sigma) %*% Y
+```
+
+1. What is the min variance portfolio with these 3 mutual funds?
+2. Find the optimal portfolio allocation among the 3 mutual funds, if the expected return is set at 15\%. Give the associated standard deviation of this portfolio.
+3. Compute the Sharpe ratio for the portfolio in A. How does it compare with that in B? 
+
+
+```{r, echo = FALSE} 
+cat("Our risk aversion parameter A is: ", A, "\n")
+cat("Our optimal portfolio allocation is: ", a.est, "\n", 
+    "for the conservative, growth and aggressive funds, respectively", "\n") 
+cat("Our min variance is given by: ", t(a.est) %*% Sigma %*% a.est, "\n")
+
+```
+
+# 5.10
+
+Let $\V{Y}$ be the excess returns of risky assets. Let $X = \V{\alpha}^T\V{Y}$ be a portfolio with allocation vector $\V{\alpha}$. Denote by $\Sigma = \text{var}(\V{Y})$ and $\mu = \mathbb{E}(\V{Y})$. Consider the following decomposition: 
+
+$$
+\V{Y} = \alpha + \beta X + \epsilon \quad \mathbb{E}(\epsilon) = 0 \quad \text{cov}(\epsilon, X) = 0
+$$
+1. Show that if $\V{\alpha} = c\Sigma^{-1}\mu$ then $\alpha =0$.
+2. Conversely if $\alpha = 0$, there exists a constant $c$ such that $\V{\alpha} = c\Sigma^{-1}\mu_0$
+
+# 5.13 
+
+Consider the following portfolio optimization problem with a risk-free asset having return $r_0$: 
+
+$$
+\min{\V{\alpha}^T \Sigma \V{\alpha}} \quad \text{such that} \quad \V{\alpha}^T \V{\mu} + (1-\V{\alpha}^T\V{1}) r_0 = \mu
+$$
+1. The optimal solution is $\V{\alpha} = P^{-1} (\mu-r_0)\Sigma^{-1}\mu_0$ where $P = \V{\mu}_0^T \Sigma^{-1} \V{\mu}_0^T$ is the squared Sharpe ratio, and $\V{\mu}_0 = \V{\mu}-r_0\V{1}$ is the vector of excess returns. 
+2. The variance of this portfolio is $\sigma^2 = (\mu - r_0)^2 / P$. 
+3. When $r_0 < \mu$, show that $r_0 + P^{1/2} \sigma = \mu$, namely the optimal allocation for the risky asset $\V{\alpha}$ is the tangent portfolio. 
+
+# 5.14
