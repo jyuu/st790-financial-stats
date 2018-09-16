@@ -159,7 +159,7 @@ pdfborder={0 0 0}}
 \let\endoldquote=\endquote
 \colorlet{shadecolor}{orange!15}
 \renewenvironment{quote}{\begin{shaded*}\quote}{\endquote\end{shaded*}}
-\newcommand{\V}[1]{{\bm{\mathbf{\MakeLowercase{#1}}}}}
+\newcommand{\V}[1]{{\bm{{\MakeLowercase{#1}}}}}
 
 
 % add tightlist ----------
@@ -230,15 +230,15 @@ is 0 and the risk-free rate is 5\%.
 \NormalTok{Sigma <-}\StringTok{ }\NormalTok{vol }\OperatorTok{%*%}\StringTok{ }\NormalTok{gamma }\OperatorTok{%*%}\StringTok{ }\NormalTok{vol}
 \NormalTok{partial_alpha <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{solve}\NormalTok{(Sigma) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Y ) }
 \NormalTok{A <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(partial_alpha }\OperatorTok{*}\StringTok{ }\NormalTok{Y)}\OperatorTok{/}\NormalTok{(expected_return }\OperatorTok{-}\StringTok{ }\NormalTok{rf)}
+\NormalTok{a.est <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{A}\OperatorTok{*}\KeywordTok{solve}\NormalTok{(Sigma) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Y}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
+\tightlist
 \item
   What is the min variance portfolio with these 3 mutual funds?
-  \textgreater{} The min variance is given by
-  \(\sigma^{*2} = \alpha^* \Sigma \alpha^*\)
 \item
   Find the optimal portfolio allocation among the 3 mutual funds, if the
   expected return is set at 15\%. Give the associated standard deviation
@@ -248,25 +248,36 @@ is 0 and the risk-free rate is 5\%.
   with that in B?
 \end{enumerate}
 
+\begin{verbatim}
+## Our risk aversion parameter A is:  7.5
+\end{verbatim}
+
+\begin{verbatim}
+## Our optimal portfolio allocation is:  0.3333333 0.2222222 0.1333333 
+##  for the conservative, growth and aggressive funds, respectively
+\end{verbatim}
+
+\begin{verbatim}
+## Our min variance is given by:  0.01333333
+\end{verbatim}
+
 \hypertarget{section-2}{%
 \section{5.10}\label{section-2}}
 
-Let \({\bm{\mathbf{\MakeLowercase{Y}}}}\) be the excess returns of risky
+Let \({\bm{{\MakeLowercase{Y}}}}\) be the excess returns of risky
 assets. Let
-\(X = {\bm{\mathbf{\MakeLowercase{\alpha}}}}^T{\bm{\mathbf{\MakeLowercase{Y}}}}\)
-be a portfolio with allocation vector
-\({\bm{\mathbf{\MakeLowercase{\alpha}}}}\). Denote by
-\(\Sigma = \text{var}({\bm{\mathbf{\MakeLowercase{Y}}}})\) and
-\(\mu = \mathbb{E}({\bm{\mathbf{\MakeLowercase{Y}}}})\). Consider the
-following decomposition:
+\(X = {\bm{{\MakeLowercase{\alpha}}}}^T{\bm{{\MakeLowercase{Y}}}}\) be a
+portfolio with allocation vector \({\bm{{\MakeLowercase{\alpha}}}}\).
+Denote by \(\Sigma = \text{var}({\bm{{\MakeLowercase{Y}}}})\) and
+\(\mu = \mathbb{E}({\bm{{\MakeLowercase{Y}}}})\). Consider the following
+decomposition:
 
 \[
-{\bm{\mathbf{\MakeLowercase{Y}}}} = \alpha + \beta X + \epsilon \quad \mathbb{E}(\epsilon) = 0 \quad \text{cov}(\epsilon, X) = 0
-\] 1. Show that if
-\({\bm{\mathbf{\MakeLowercase{\alpha}}}} = c\Sigma^{-1}\mu\) then
-\(\alpha =0\). 2. Conversely if \(\alpha = 0\), there exists a constant
-\(c\) such that
-\({\bm{\mathbf{\MakeLowercase{\alpha}}}} = c\Sigma^{-1}\mu_0\)
+{\bm{{\MakeLowercase{Y}}}} = \alpha + \beta X + \epsilon \quad \mathbb{E}(\epsilon) = 0 \quad \text{cov}(\epsilon, X) = 0
+\] 1. Show that if \({\bm{{\MakeLowercase{\alpha}}}} = c\Sigma^{-1}\mu\)
+then \(\alpha =0\). 2. Conversely if \(\alpha = 0\), there exists a
+constant \(c\) such that
+\({\bm{{\MakeLowercase{\alpha}}}} = c\Sigma^{-1}\mu_0\)
 
 \hypertarget{section-3}{%
 \section{5.13}\label{section-3}}
@@ -275,21 +286,96 @@ Consider the following portfolio optimization problem with a risk-free
 asset having return \(r_0\):
 
 \[
-\min{{\bm{\mathbf{\MakeLowercase{\alpha}}}}^T \Sigma {\bm{\mathbf{\MakeLowercase{\alpha}}}}} \quad \text{such that} \quad {\bm{\mathbf{\MakeLowercase{\alpha}}}}^T {\bm{\mathbf{\MakeLowercase{\mu}}}} + (1-{\bm{\mathbf{\MakeLowercase{\alpha}}}}^T{\bm{\mathbf{\MakeLowercase{1}}}}) r_0 = \mu
+\min{{\bm{{\MakeLowercase{\alpha}}}}^T \Sigma {\bm{{\MakeLowercase{\alpha}}}}} \quad \text{such that} \quad {\bm{{\MakeLowercase{\alpha}}}}^T {\bm{{\MakeLowercase{\mu}}}} + (1-{\bm{{\MakeLowercase{\alpha}}}}^T{\bm{{\MakeLowercase{1}}}}) r_0 = \mu
 \] 1. The optimal solution is
-\({\bm{\mathbf{\MakeLowercase{\alpha}}}} = P^{-1} (\mu-r_0)\Sigma^{-1}\mu_0\)
+\({\bm{{\MakeLowercase{\alpha}}}} = P^{-1} (\mu-r_0)\Sigma^{-1}\mu_0\)
 where
-\(P = {\bm{\mathbf{\MakeLowercase{\mu}}}}_0^T \Sigma^{-1} {\bm{\mathbf{\MakeLowercase{\mu}}}}_0^T\)
+\(P = {\bm{{\MakeLowercase{\mu}}}}_0^T \Sigma^{-1} {\bm{{\MakeLowercase{\mu}}}}_0^T\)
 is the squared Sharpe ratio, and
-\({\bm{\mathbf{\MakeLowercase{\mu}}}}_0 = {\bm{\mathbf{\MakeLowercase{\mu}}}}-r_0{\bm{\mathbf{\MakeLowercase{1}}}}\)
+\({\bm{{\MakeLowercase{\mu}}}}_0 = {\bm{{\MakeLowercase{\mu}}}}-r_0{\bm{{\MakeLowercase{1}}}}\)
 is the vector of excess returns. 2. The variance of this portfolio is
 \(\sigma^2 = (\mu - r_0)^2 / P\). 3. When \(r_0 < \mu\), show that
 \(r_0 + P^{1/2} \sigma = \mu\), namely the optimal allocation for the
-risky asset \({\bm{\mathbf{\MakeLowercase{\alpha}}}}\) is the tangent
+risky asset \({\bm{{\MakeLowercase{\alpha}}}}\) is the tangent
 portfolio.
 
 \hypertarget{section-4}{%
 \section{5.14}\label{section-4}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Download the monthly data for 8 stocks.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(quantmod)}
+\NormalTok{start <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2001-01-01"}\NormalTok{)}
+\NormalTok{end <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2014-12-29"}\NormalTok{)}
+\KeywordTok{getSymbols}\NormalTok{(}\StringTok{"DGS3MO"}\NormalTok{, }\DataTypeTok{src =} \StringTok{"FRED"}\NormalTok{, }\DataTypeTok{from =}\NormalTok{ start, }\DataTypeTok{to =}\NormalTok{ end) }\CommentTok{# TREASURY}
+\NormalTok{symbols <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"SPY"}\NormalTok{, }
+             \CommentTok{#"DVMT", # DELL DOES NOT WORK}
+             \StringTok{"F"}\NormalTok{,  }\CommentTok{# FORD}
+             \StringTok{"GE"}\NormalTok{, }
+             \StringTok{"IBM"}\NormalTok{,}
+             \StringTok{"INTC"}\NormalTok{, }\CommentTok{# INTEL}
+             \StringTok{"JNJ"}\NormalTok{, }\CommentTok{# JOHNSON }
+             \StringTok{"MRK"}\NormalTok{, }\CommentTok{# MERCK}
+             \StringTok{"MSFT"}\NormalTok{) }\CommentTok{# MICROSOFT}
+\KeywordTok{getSymbols}\NormalTok{(symbols, }\DataTypeTok{from =}\NormalTok{ start, }\DataTypeTok{to =}\NormalTok{ end) }
+\NormalTok{closing.prices <-}\StringTok{ }\KeywordTok{merge.xts}\NormalTok{(DGS3MO,}
+\NormalTok{                            SPY[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            F[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            GE[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            IBM[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            INTC[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            JNJ[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            MRK[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            MSFT[,}\DecValTok{4}\NormalTok{])}
+\KeywordTok{saveRDS}\NormalTok{(closing.prices, }\StringTok{"~/workspace/st790-financial-stats/data/hw2_closingprices.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Construct the optimal allocation using the monthly data.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{closing.prices <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"~/workspace/st790-financial-stats/data/hw2_closingprices.rds"}\NormalTok{) }
+\NormalTok{data <-}\StringTok{ }\NormalTok{closing.prices[}\StringTok{"2001-01-02/2011-12-31"}\NormalTok{]}
+\NormalTok{data <-}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(data)}
+\NormalTok{by_month <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(data))\{ }
+\NormalTok{  temp <-}\StringTok{ }\NormalTok{data[,i]}
+\NormalTok{  monthly <-}\StringTok{ }\KeywordTok{log}\NormalTok{(}\KeywordTok{monthlyReturn}\NormalTok{(temp)}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{  by_month <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(by_month, monthly )}
+  \KeywordTok{colnames}\NormalTok{(by_month)[i] <-}\StringTok{ }\KeywordTok{strsplit}\NormalTok{(}\KeywordTok{names}\NormalTok{(temp), }\StringTok{"[.]"}\NormalTok{)[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{]}
+\NormalTok{\}}
+\CommentTok{# get the excess return }
+\NormalTok{excess_return <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{() }
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{3}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(by_month))\{ }
+\NormalTok{  temp <-}\StringTok{ }\NormalTok{by_month[,j] }\OperatorTok{-}\StringTok{ }\NormalTok{by_month[,}\DecValTok{1}\NormalTok{]}
+\NormalTok{  excess_return <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(excess_return, temp)}
+  \KeywordTok{colnames}\NormalTok{(excess_return)[j}\DecValTok{-2}\NormalTok{] <-}\StringTok{ }\KeywordTok{names}\NormalTok{(temp)}
+\NormalTok{\}}
+\CommentTok{# get the alphas }
+\NormalTok{alphas <-}\StringTok{ }\KeywordTok{c}\NormalTok{() }
+\NormalTok{betas <-}\StringTok{ }\KeywordTok{c}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(k }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(excess_return))\{}
+\NormalTok{  results <-}\StringTok{ }\KeywordTok{lsfit}\NormalTok{(by_month[,}\DecValTok{2}\NormalTok{], excess_return[,k])}\OperatorTok{$}\NormalTok{coefficients}
+\NormalTok{  alphas <-}\StringTok{ }\KeywordTok{c}\NormalTok{(alphas, results[}\DecValTok{1}\NormalTok{])}
+\NormalTok{  betas <-}\StringTok{ }\KeywordTok{c}\NormalTok{(betas, results[}\DecValTok{2}\NormalTok{])}
+\NormalTok{\}}
+\CommentTok{# }
+\end{Highlighting}
+\end{Shaded}
 \newpage
 \singlespacing 
 \end{document}

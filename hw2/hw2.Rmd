@@ -38,9 +38,12 @@ header-includes:
 - \let\endoldquote=\endquote
 - \colorlet{shadecolor}{orange!15}
 - \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
-- \newcommand{\V}[1]{{\bm{\mathbf{\MakeLowercase{#1}}}}}
+- \newcommand{\V}[1]{{\bm{{\MakeLowercase{#1}}}}}
 --- 
 
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library(quantmod)
+```
 # 5.2 
 
 Let $s_A$ and $s_B$ be the Sharpe ratio of portfolios A and B. Let $r_A$ and $r_B$ be the expected returns of these two portfolios, with standard deviation denoted by $\sigma_A$ and $\sigma_B$. Assume that through self financing, portfolio A borrows ($\sigma_B/\sigma_A-1$) at risk-free rate $r_f$ to leverage so that its risk is now the same as that of portfolio B. 
@@ -101,3 +104,63 @@ $$
 3. When $r_0 < \mu$, show that $r_0 + P^{1/2} \sigma = \mu$, namely the optimal allocation for the risky asset $\V{\alpha}$ is the tangent portfolio. 
 
 # 5.14
+
+1. Download the monthly data for 8 stocks. 
+
+```{r, eval = FALSE}
+library(quantmod)
+start <- as.Date("2001-01-01")
+end <- as.Date("2014-12-29")
+getSymbols("DGS3MO", src = "FRED", from = start, to = end) # TREASURY
+symbols <- c("SPY", 
+             #"DVMT", # DELL DOES NOT WORK
+             "F",  # FORD
+             "GE", 
+             "IBM",
+             "INTC", # INTEL
+             "JNJ", # JOHNSON 
+             "MRK", # MERCK
+             "MSFT") # MICROSOFT
+getSymbols(symbols, from = start, to = end) 
+closing.prices <- merge.xts(DGS3MO,
+                            SPY[,4], 
+                            F[,4], 
+                            GE[,4], 
+                            IBM[,4], 
+                            INTC[,4], 
+                            JNJ[,4], 
+                            MRK[,4], 
+                            MSFT[,4])
+saveRDS(closing.prices, "~/workspace/st790-financial-stats/data/hw2_closingprices.rds")
+```
+
+2. Construct the optimal allocation using the monthly data. 
+
+```{r}
+closing.prices <- readRDS("~/workspace/st790-financial-stats/data/hw2_closingprices.rds") 
+data <- closing.prices["2001-01-02/2011-12-31"]
+data <- na.omit(data)
+by_month <- data.frame()
+for (i in 1:ncol(data)){ 
+  temp <- data[,i]
+  monthly <- log(monthlyReturn(temp)+1)
+  by_month <- cbind(by_month, monthly )
+  colnames(by_month)[i] <- strsplit(names(temp), "[.]")[[1]][1]
+}
+# get the excess return 
+excess_return <- data.frame() 
+for(j in 3:ncol(by_month)){ 
+  temp <- by_month[,j] - by_month[,1]
+  excess_return <- cbind(excess_return, temp)
+  colnames(excess_return)[j-2] <- names(temp)
+}
+# get the alphas 
+alphas <- c() 
+betas <- c()
+for(k in 1:ncol(excess_return)){
+  results <- lsfit(by_month[,2], excess_return[,k])$coefficients
+  alphas <- c(alphas, results[1])
+  betas <- c(betas, results[2])
+}
+# 
+```
