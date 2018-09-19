@@ -1,0 +1,542 @@
+\documentclass[11pt,]{article}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\newcommand*{\authorfont}{\fontfamily{phv}\selectfont}
+  \usepackage[]{mathpazo}
+  
+  
+  \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+
+
+\usepackage{abstract}
+\renewcommand{\abstractname}{}    % clear the title
+\renewcommand{\absnamepos}{empty} % originally center
+
+\renewenvironment{abstract}
+{{%
+  \setlength{\leftmargin}{0mm}
+  \setlength{\rightmargin}{\leftmargin}%
+}%
+  \relax}
+{\endlist}
+
+\makeatletter
+\def\@maketitle{%
+  \newpage
+  %  \null
+  %  \vskip 2em%
+    %  \begin{center}%
+    \let \footnote \thanks
+  {\fontsize{18}{20}\selectfont\raggedright  \setlength{\parindent}{0pt} \@title \par}%
+}
+%\fi
+\makeatother
+
+
+  
+  
+  \setcounter{secnumdepth}{0}
+
+      \usepackage{color}
+  \usepackage{fancyvrb}
+  \newcommand{\VerbBar}{|}
+  \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+  % Add ',fontsize=\small' for more characters per line
+  \usepackage{framed}
+  \definecolor{shadecolor}{RGB}{248,248,248}
+  \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+  \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+  \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+  \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+  \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+  \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+  \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+  \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+  \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+  \newcommand{\ImportTok}[1]{#1}
+  \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+  \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+  \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+  \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+  \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+  \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+  \newcommand{\BuiltInTok}[1]{#1}
+  \newcommand{\ExtensionTok}[1]{#1}
+  \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+  \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+  \newcommand{\RegionMarkerTok}[1]{#1}
+  \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+  \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+  \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+  \newcommand{\NormalTok}[1]{#1}
+        \usepackage{longtable,booktabs}
+  
+    
+    \title{Homework 2  }
+  
+  
+  
+  \author{\Large Joyce Yu Cahoon\vspace{0.05in} \newline\normalsize\emph{}  }
+  
+  
+  \date{}
+
+\usepackage{titlesec}
+
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\itshape}
+\titleformat*{\subsubsection}{\normalsize\itshape}
+\titleformat*{\paragraph}{\normalsize\itshape}
+\titleformat*{\subparagraph}{\normalsize\itshape}
+
+
+  
+      
+  
+  \newtheorem{hypothesis}{Hypothesis}
+\usepackage{setspace}
+
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+  \ifxetex
+  \PassOptionsToPackage{hyphens}{url}\usepackage[setpagesize=false, % page size defined by xetex
+                                                 unicode=false, % unicode breaks when used with xetex
+                                                 xetex]{hyperref}
+  \else
+    \PassOptionsToPackage{hyphens}{url}\usepackage[unicode=true]{hyperref}
+  \fi
+}
+
+\@ifpackageloaded{color}{
+  \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+  \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+bookmarks=true,
+pdfauthor={Joyce Yu Cahoon ()},
+pdfkeywords = {},  
+pdftitle={Homework 2},
+colorlinks=true,
+citecolor=blue,
+urlcolor=blue,
+linkcolor=magenta,
+pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\setlength{\abovedisplayskip}{.2pt}
+\setlength{\belowdisplayskip}{.2pt}
+\usepackage{placeins}
+\usepackage{setspace}
+\usepackage{chngcntr}
+\usepackage{multicol}
+\usepackage{lscape}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{multirow}
+\newtheorem{theorem}{Theorem}
+\usepackage[linesnumbered,algoruled,boxed,lined,commentsnumbered]{algorithm2e}
+\usepackage{bm}
+\usepackage{framed}
+\usepackage{xcolor}
+\let\oldquote=\quote
+\let\endoldquote=\endquote
+\colorlet{shadecolor}{orange!15}
+\renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
+\newcommand{\V}[1]{{\bm{{#1}}}}
+
+
+% add tightlist ----------
+\providecommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\begin{document}
+
+% \pagenumbering{arabic}% resets `page` counter to 1 
+%
+% \maketitle
+
+{% \usefont{T1}{pnc}{m}{n}
+\setlength{\parindent}{0pt}
+\thispagestyle{plain}
+{\fontsize{18}{20}\selectfont\raggedright 
+\maketitle  % title \par  
+
+}
+
+{
+  \vskip 13.5pt\relax \normalsize\fontsize{11}{12} 
+  \textbf{\authorfont Joyce Yu Cahoon} \hskip 15pt \emph{\small }   
+  
+}
+
+}
+
+
+
+
+
+
+\vskip 6.5pt
+
+
+\noindent  \section{5.2}\label{section}
+
+Let \(s_A\) and \(s_B\) be the Sharpe ratio of portfolios A and B. Let
+\(r_A\) and \(r_B\) be the expected returns of these two portfolios,
+with standard deviation denoted by \(\sigma_A\) and \(\sigma_B\). Assume
+that through self financing, portfolio A borrows
+(\(\sigma_B/\sigma_A-1\)) at risk-free rate \(r_f\) to leverage so that
+its risk is now the same as that of portfolio B.
+
+Show that the excess return of leveraged investment in portfolio A is
+larger than the expected return of portfolio B if \(s_A > s_B\). This
+shows that the Sharpe ratio measures the efficiency of a portfolio.
+
+\newpage 
+
+\section{5.3}\label{section-1}
+
+Suppose that three mutual funds (conservative, growth and aggressive)
+have annual log-returns of 15\%, 20\% and 30\% with volatility of 20\%,
+30\% and 50\% respectively. The correlation between any of the 2 funds
+is 0 and the risk-free rate is 5\%.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rf <-}\StringTok{ }\NormalTok{.}\DecValTok{05}
+\NormalTok{vol <-}\StringTok{ }\KeywordTok{c}\NormalTok{(.}\DecValTok{20}\NormalTok{, .}\DecValTok{30}\NormalTok{, .}\DecValTok{50}\NormalTok{)}
+\NormalTok{r <-}\StringTok{ }\KeywordTok{c}\NormalTok{(.}\DecValTok{15}\NormalTok{, .}\DecValTok{20}\NormalTok{, .}\DecValTok{30}\NormalTok{) }
+\NormalTok{expected_return <-}\StringTok{ }\NormalTok{.}\DecValTok{15} 
+\NormalTok{Y <-}\StringTok{ }\NormalTok{r }\OperatorTok{-}\StringTok{ }\NormalTok{rf }\CommentTok{# excess returns }
+\NormalTok{gamma <-}\StringTok{ }\KeywordTok{diag}\NormalTok{(}\DataTypeTok{x =} \DecValTok{1}\NormalTok{, }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{) }
+\NormalTok{vol <-}\StringTok{ }\KeywordTok{diag}\NormalTok{(vol, }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{) }
+\NormalTok{Sigma <-}\StringTok{ }\NormalTok{vol }\OperatorTok{%*%}\StringTok{ }\NormalTok{gamma }\OperatorTok{%*%}\StringTok{ }\NormalTok{vol}
+\NormalTok{partial_alpha <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{solve}\NormalTok{(Sigma) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Y ) }
+\NormalTok{A <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(partial_alpha }\OperatorTok{*}\StringTok{ }\NormalTok{Y)}\OperatorTok{/}\NormalTok{(expected_return }\OperatorTok{-}\StringTok{ }\NormalTok{rf)}
+\NormalTok{a.est <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{A}\OperatorTok{*}\KeywordTok{solve}\NormalTok{(Sigma) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What is the min variance portfolio with these 3 mutual funds?
+\item
+  Find the optimal portfolio allocation among the 3 mutual funds, if the
+  expected return is set at 15\%. Give the associated standard deviation
+  of this portfolio.
+\item
+  Compute the Sharpe ratio for the portfolio in A. How does it compare
+  with that in B?
+\end{enumerate}
+
+\begin{verbatim}
+## Our risk aversion parameter A is:  7.5
+\end{verbatim}
+
+\begin{verbatim}
+## Our optimal portfolio allocation is:  0.3333333 0.2222222 0.1333333 
+##  for the conservative, growth and aggressive funds, respectively
+\end{verbatim}
+
+\begin{verbatim}
+## Our min variance is given by:  0.01333333
+\end{verbatim}
+
+\newpage
+
+\section{5.10}\label{section-2}
+
+Let \(Y\) be the excess returns of risky assets. Let \(X = a^TY\) be a
+portfolio with allocation vector \(a\). Denote by
+\(\Sigma = \text{var}(Y)\) and \(\mu = \mathbb{E}(Y)\). Consider the
+following decomposition:
+
+\[
+Y = \alpha + \beta X + \epsilon \quad \mathbb{E}(\epsilon) = 0 \quad \text{cov}(\epsilon, X) = 0
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Show that if \(a = c\Sigma^{-1}\mu\) then \(\alpha =0\).
+\item
+  Conversely if \(\alpha = 0\), there exists a constant \(c\) such that
+  \(a = c\Sigma^{-1}\mu_0\)
+\end{enumerate}
+
+\newpage
+
+\section{5.13}\label{section-3}
+
+Consider the following portfolio optimization problem with a risk-free
+asset having return \(r_0\):
+
+\[
+\min{\V{\alpha}^T \Sigma \V{\alpha}} \quad \text{such that} \quad \V{\alpha}^T \V{\mu} + (1-\V{\alpha}^T\V{1}) r_0 = \mu
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The optimal solution is
+  \(\V{\alpha} = P^{-1} (\mu-r_0)\Sigma^{-1}\mu_0\) where
+  \(P = \V{\mu}_0^T \Sigma^{-1} \V{\mu}_0^T\) is the squared Sharpe
+  ratio, and \(\V{\mu}_0 = \V{\mu}-r_0\V{1}\) is the vector of excess
+  returns.
+\item
+  The variance of this portfolio is \(\sigma^2 = (\mu - r_0)^2 / P\).
+\item
+  When \(r_0 < \mu\), show that \(r_0 + P^{1/2} \sigma = \mu\), namely
+  the optimal allocation for the risky asset \(\V{\alpha}\) is the
+  tangent portfolio.
+\end{enumerate}
+
+\newpage 
+
+\section{5.14}\label{section-4}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Download the monthly data for 8 stocks.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(quantmod)}
+\NormalTok{start <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2001-01-01"}\NormalTok{)}
+\NormalTok{end <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2014-12-29"}\NormalTok{)}
+\KeywordTok{getSymbols}\NormalTok{(}\StringTok{"DGS3MO"}\NormalTok{, }\DataTypeTok{src =} \StringTok{"FRED"}\NormalTok{, }\DataTypeTok{from =}\NormalTok{ start, }\DataTypeTok{to =}\NormalTok{ end) }\CommentTok{# TREASURY}
+\NormalTok{symbols <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"SPY"}\NormalTok{, }
+             \CommentTok{#"DVMT", # DELL DOES NOT WORK}
+             \StringTok{"F"}\NormalTok{,  }\CommentTok{# FORD}
+             \StringTok{"GE"}\NormalTok{, }
+             \StringTok{"IBM"}\NormalTok{,}
+             \StringTok{"INTC"}\NormalTok{, }\CommentTok{# INTEL}
+             \StringTok{"JNJ"}\NormalTok{, }\CommentTok{# JOHNSON }
+             \StringTok{"MRK"}\NormalTok{, }\CommentTok{# MERCK}
+             \StringTok{"MSFT"}\NormalTok{) }\CommentTok{# MICROSOFT}
+\KeywordTok{getSymbols}\NormalTok{(symbols, }\DataTypeTok{from =}\NormalTok{ start, }\DataTypeTok{to =}\NormalTok{ end) }
+\NormalTok{closing.prices <-}\StringTok{ }\KeywordTok{merge.xts}\NormalTok{(DGS3MO,}
+\NormalTok{                            SPY[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            F[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            GE[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            IBM[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            INTC[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            JNJ[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            MRK[,}\DecValTok{4}\NormalTok{], }
+\NormalTok{                            MSFT[,}\DecValTok{4}\NormalTok{])}
+\NormalTok{volume <-}\StringTok{ }\KeywordTok{merge.xts}\NormalTok{(DGS3MO,}
+\NormalTok{                            SPY[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            F[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            GE[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            IBM[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            INTC[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            JNJ[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            MRK[,}\DecValTok{5}\NormalTok{], }
+\NormalTok{                            MSFT[,}\DecValTok{5}\NormalTok{])}
+\KeywordTok{saveRDS}\NormalTok{(closing.prices, }\StringTok{"~/workspace/st790-financial-stats/data/hw2_closingprices.rds"}\NormalTok{)}
+\KeywordTok{saveRDS}\NormalTok{(volume, }\StringTok{"~/workspace/st790-financial-stats/data/hw2_volume.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Construct the optimal allocation using the monthly data.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{closing.prices <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"~/workspace/st790-financial-stats/data/hw2_closingprices.rds"}\NormalTok{) }
+\NormalTok{data <-}\StringTok{ }\NormalTok{closing.prices[}\StringTok{"2001-01-02/2011-12-31"}\NormalTok{]}
+\NormalTok{data <-}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(data)}
+\NormalTok{by_month <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(data))\{ }
+\NormalTok{  temp <-}\StringTok{ }\NormalTok{data[,i]}
+\NormalTok{  monthly <-}\StringTok{ }\KeywordTok{log}\NormalTok{(}\KeywordTok{monthlyReturn}\NormalTok{(temp)}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{  by_month <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(by_month, monthly )}
+  \KeywordTok{colnames}\NormalTok{(by_month)[i] <-}\StringTok{ }\KeywordTok{strsplit}\NormalTok{(}\KeywordTok{names}\NormalTok{(temp), }\StringTok{"[.]"}\NormalTok{)[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{]}
+\NormalTok{\}}
+\CommentTok{# get the excess return }
+\NormalTok{excess_return <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{() }
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(by_month))\{ }
+\NormalTok{  temp <-}\StringTok{ }\NormalTok{by_month[,j] }\OperatorTok{-}\StringTok{ }\NormalTok{by_month[,}\DecValTok{1}\NormalTok{] }\CommentTok{# subtract the 3 mo treas rate}
+\NormalTok{  excess_return <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(excess_return, temp)}
+  \KeywordTok{colnames}\NormalTok{(excess_return)[j}\OperatorTok{-}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{names}\NormalTok{(temp)}
+\NormalTok{\}}
+\CommentTok{# get the alphas }
+\NormalTok{alphas <-}\StringTok{ }\KeywordTok{c}\NormalTok{() }
+\NormalTok{betas <-}\StringTok{ }\KeywordTok{c}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(k }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(excess_return))\{}
+\NormalTok{  results <-}\StringTok{ }\KeywordTok{lsfit}\NormalTok{(excess_return[,}\DecValTok{1}\NormalTok{], excess_return[,k])}\OperatorTok{$}\NormalTok{coefficients}
+\NormalTok{  alphas <-}\StringTok{ }\KeywordTok{c}\NormalTok{(alphas, results[}\DecValTok{1}\NormalTok{])}
+\NormalTok{  betas <-}\StringTok{ }\KeywordTok{c}\NormalTok{(betas, results[}\DecValTok{2}\NormalTok{])}
+\NormalTok{\}}
+\CommentTok{# get the residuals }
+\NormalTok{x <-}\StringTok{ }\NormalTok{excess_return}\OperatorTok{$}\NormalTok{SPY}
+\NormalTok{y <-}\StringTok{ }\NormalTok{excess_return[,}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{8}\NormalTok{)]}
+\NormalTok{residuals <-}\StringTok{ }\KeywordTok{resid}\NormalTok{(}\KeywordTok{lsfit}\NormalTok{(x, y))}
+\NormalTok{Sigma <-}\StringTok{ }\KeywordTok{t}\NormalTok{(residuals) }\OperatorTok{%*%}\StringTok{ }\NormalTok{residuals }\OperatorTok{/}\StringTok{ }\KeywordTok{dim}\NormalTok{(y)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{mreturn <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x) }
+\NormalTok{msigma <-}\StringTok{ }\KeywordTok{var}\NormalTok{(x)}
+\NormalTok{T0 <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(y)[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\NormalTok{( }\DecValTok{1}\OperatorTok{+}\NormalTok{mreturn}\OperatorTok{^}\DecValTok{2}\OperatorTok{/}\NormalTok{msigma ) }\OperatorTok{*}\StringTok{ }\KeywordTok{t}\NormalTok{(alphas) }\OperatorTok{%*%}\StringTok{ }\KeywordTok{solve}\NormalTok{(Sigma, alphas) }\CommentTok{# for testing}
+\CommentTok{# get the optimal allocation}
+\NormalTok{Y <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(y, }\DecValTok{2}\NormalTok{, mean)}\CommentTok{# excess returns }
+\NormalTok{partial_alpha <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{solve}\NormalTok{(Sigma) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Y ) }
+\NormalTok{A <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(partial_alpha)}\OperatorTok{/}\NormalTok{.}\DecValTok{8} \CommentTok{# since invest 20% in riskless asset}
+\NormalTok{a.est <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{A}\OperatorTok{*}\KeywordTok{solve}\NormalTok{(Sigma) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Y}
+\KeywordTok{rownames}\NormalTok{(a.est) <-}\StringTok{ }\KeywordTok{names}\NormalTok{(y)}
+\CommentTok{#print("This is the optimal allocation:")}
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{t}\NormalTok{(a.est))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rrrrrrr@{}}
+\toprule
+F & GE & IBM & INTC & JNJ & MRK & MSFT\tabularnewline
+\midrule
+\endhead
+0.0583626 & 0.1029486 & 0.1434665 & 0.0735273 & 0.2572974 & 0.071926 &
+0.0924715\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  If allocation is fixed over the next 2 years, compare the performance
+  of the portfolio over next 6-mo, one-yr, two-year, and three-year:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data <-}\StringTok{ }\NormalTok{closing.prices[}\StringTok{"2011-12-31/2012-05-31"}\NormalTok{]}
+\NormalTok{data <-}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(data)}
+\NormalTok{by_month <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(data))\{ }
+\NormalTok{  temp <-}\StringTok{ }\NormalTok{data[,i]}
+\NormalTok{  monthly <-}\StringTok{ }\KeywordTok{log}\NormalTok{(}\KeywordTok{monthlyReturn}\NormalTok{(temp)}\OperatorTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{  by_month <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(by_month, monthly )}
+  \KeywordTok{colnames}\NormalTok{(by_month)[i] <-}\StringTok{ }\KeywordTok{strsplit}\NormalTok{(}\KeywordTok{names}\NormalTok{(temp), }\StringTok{"[.]"}\NormalTok{)[[}\DecValTok{1}\NormalTok{]][}\DecValTok{1}\NormalTok{]}
+\NormalTok{\}}
+\CommentTok{# get the excess return }
+\NormalTok{excess_return <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{() }
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(by_month))\{ }
+\NormalTok{  temp <-}\StringTok{ }\NormalTok{by_month[,j] }\OperatorTok{-}\StringTok{ }\NormalTok{by_month[,}\DecValTok{1}\NormalTok{] }\CommentTok{# subtract the 3 mo treas rate}
+\NormalTok{  excess_return <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(excess_return, temp)}
+  \KeywordTok{colnames}\NormalTok{(excess_return)[j}\OperatorTok{-}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{names}\NormalTok{(temp)}
+\NormalTok{\}}
+\CommentTok{# get the residuals }
+\NormalTok{x <-}\StringTok{ }\NormalTok{excess_return}\OperatorTok{$}\NormalTok{SPY}
+\NormalTok{y <-}\StringTok{ }\NormalTok{excess_return[,}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{8}\NormalTok{)]}
+\NormalTok{residuals <-}\StringTok{ }\KeywordTok{resid}\NormalTok{(}\KeywordTok{lsfit}\NormalTok{(x, y))}
+\NormalTok{Sigma <-}\StringTok{ }\KeywordTok{t}\NormalTok{(residuals) }\OperatorTok{%*%}\StringTok{ }\NormalTok{residuals }\OperatorTok{/}\StringTok{ }\KeywordTok{dim}\NormalTok{(y)[}\DecValTok{1}\NormalTok{]}
+\CommentTok{# calculate excess returns over 6 month period }
+\NormalTok{y_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(y, }\DecValTok{2}\NormalTok{, mean)}
+\CommentTok{# calculate the risk free rate return }
+\NormalTok{rf <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(by_month}\OperatorTok{$}\NormalTok{DGS3MO)}
+\CommentTok{# log return }
+\NormalTok{mu_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\NormalTok{rf }\OperatorTok{+}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(a.est)}\OperatorTok{*}\NormalTok{(y_}\DecValTok{6}\NormalTok{))}
+\CommentTok{# volatility}
+\NormalTok{std_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{t}\NormalTok{(a.est) }\OperatorTok{%*%}\StringTok{ }\NormalTok{Sigma }\OperatorTok{%*%}\StringTok{ }\NormalTok{a.est)}
+\CommentTok{# Sharpe ratio}
+\NormalTok{s_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\NormalTok{(mu_}\DecValTok{6} \OperatorTok{-}\StringTok{ }\NormalTok{rf)}\OperatorTok{/}\NormalTok{std_}\DecValTok{6} 
+\CommentTok{# Repeat the above process for one year and two year and three year}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule
+timeline & return & volatility & sharpe\tabularnewline
+\midrule
+\endhead
+6 Months & 0.0506173 & 0.0108012 & -18.510468\tabularnewline
+1 Year & 0.0181359 & 0.0130991 & -4.444705\tabularnewline
+2 Years & 0.0188856 & 0.0112804 & -2.953154\tabularnewline
+3 Years & 0.0036222 & 0.0139989 & 1.634150\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage 
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  Create a value weighted portfolio.
+
+  \begin{longtable}[]{@{}ccccccc@{}}
+  \toprule
+  F & GE & IBM & INTC & JNJ & MRK & MSFT\tabularnewline
+  \midrule
+  \endhead
+  0.1032031 & 0.1238695 & 0.1062568 & 0.1470514 & 0.0860065 & 0.0616742
+  & 0.1719384\tabularnewline
+  \bottomrule
+  \end{longtable}
+\end{enumerate}
+
+Compare the performance:
+
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule
+timeline & return & volatility & sharpe\tabularnewline
+\midrule
+\endhead
+6 Months & 0.0540661 & 0.0103545 & -18.975889\tabularnewline
+1 Year & 0.0168247 & 0.0138252 & -4.306130\tabularnewline
+2 Years & 0.0186687 & 0.0142250 & -2.357101\tabularnewline
+3 Years & 0.0041848 & 0.0158634 & 1.477545\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Create a portfolio with .114 invested in each stock and .2 in the
+  risk-free bond, and compare the performance as before. Note that we
+  only have 7 stocks since DELL is not provided by Yahoo.
+\end{enumerate}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule
+timeline & return & volatility & sharpe\tabularnewline
+\midrule
+\endhead
+6 Months & 0.0520906 & 0.0109909 & -18.056892\tabularnewline
+1 Year & 0.0178008 & 0.0129052 & -4.537455\tabularnewline
+2 Years & 0.0187470 & 0.0122189 & -2.737684\tabularnewline
+3 Years & 0.0038139 & 0.0144713 & 1.594051\tabularnewline
+\bottomrule
+\end{longtable}
+\newpage
+\singlespacing 
+\end{document}
