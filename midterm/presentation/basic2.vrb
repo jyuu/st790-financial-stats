@@ -1,0 +1,12 @@
+\frametitle{Introduction}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{include_graphics}\NormalTok{(}\StringTok{"~/workspace/st790-financial-stats/midterm/presentation/split.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\includegraphics[width=17.28in]{~/workspace/st790-financial-stats/midterm/presentation/split} \caption{Typical IRA equity-bond mix}\label{fig:unnamed-chunk-2}
+\end{figure}
+

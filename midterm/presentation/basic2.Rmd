@@ -32,25 +32,23 @@ library(png)
 
 # Introduction 
 
-```{r, fig.cap="Typical IRA equity-bond mix"} 
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/split.png")
+```{r, echo = FALSE, fig.cap="Typical IRA equity-bond mix", out.width="80%"} 
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/split.png")
 ```
 
 
 # How rebalancing works
 
 - Start with buy-and-hold portfolio 
+    + 60\% allocation to S&P500 
+    + 40\% allocation to 10-year Treasury bond 
 - Add a short straddle (sell a call and put option)
-
-# Under ideal conditions
-
-- The conditions under which rebalancing returns.. when there is mean reversion 
-- when the price underperf
+- Works in a trendless environment, marked by mean reversion 
 
 # The problem 
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="70%", fig.cap="Rebalancing magnified drawdowns. Source: Reuters."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/rebalancing.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/rebalancing.png")
 ```
 
 # Fixed-weight rebalance of one asset and cash
@@ -134,7 +132,7 @@ $$
 # Characteristic return profile  
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Divergence in stock and bond returns results in negative convexity. Source: Reuters."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/rebalancing_2.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/rebalancing_2.png")
 ```
 
 # A solution
@@ -157,7 +155,7 @@ grid.arrange(img1, img2, ncol = 2)
 They utilized a proprietary moving-average cross-over system. But in general: 
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="45%", fig.cap="Bullish and bearish signals from Emerson Electric arising from 50-day EMA and 200-day EMA. Source: Stock Charts."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/macd.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/macd.png")
 ```
 
 # How momentum works
@@ -169,25 +167,25 @@ $$
 $$
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Cumulative return of assets with fixed-weight rebalancing and momentum overlay. Source: Man Group."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_overlay.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/momentum_overlay.png")
 ```
 
 # Tracks the desired long-term allocation 
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Allocation differences under fixed weight rebalancing, with and without momentum overlay. Source: Man Group."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_overlay_equities.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/momentum_overlay_equities.png")
 ```
 
 # Improves performance 
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Cumulative returns of a fixed portfolio against one with momentum overlay. Source: Man Group."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_cul.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/momentum_cul.png")
 ```
 
 # Compared to our original 
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.width="60%", fig.cap="Impact of momentum overlay between 2008 and 2010 period. Source: Man Group."}
-knitr::include_graphics("/Users/jcahoon/workspace/st790-financial-stats/midterm/presentation/momentum_original.png")
+knitr::include_graphics("~/workspace/st790-financial-stats/midterm/presentation/momentum_original.png")
 ```
 
 # Results
