@@ -1,0 +1,53 @@
+---
+output: 
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    template: ~/workspace/cv/git/svm-latex-ms.tex
+title: "Homework 3"
+author: 
+  name: "Joyce Yu Cahoon"
+#abstract: "Application of sequential monte carlo (SMC) to the development of IM plausibility functions for the Nile."
+# bibliography: /Users/jcahoon/workspace/metar/ref.bib
+#bibliography: /home/joyce/workspace/metar/ref.bib
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+# spacing: double
+endnote: no
+header-includes:
+- \setlength{\abovedisplayskip}{.2pt}
+- \setlength{\belowdisplayskip}{.2pt}
+- \usepackage{placeins}
+- \usepackage{setspace}
+- \usepackage{chngcntr}
+- \usepackage{multicol}
+- \usepackage{lscape}
+- \counterwithin{figure}{section}
+- \counterwithin{table}{section}
+- \usepackage{mathrsfs}
+- \usepackage{mathtools}
+- \usepackage{multirow}
+- \newtheorem{theorem}{Theorem}
+- \usepackage[linesnumbered,algoruled,boxed,lined,commentsnumbered]{algorithm2e} 
+- \usepackage{bm}
+- \usepackage{framed}
+- \usepackage{xcolor}
+- \let\oldquote=\quote
+- \let\endoldquote=\endquote
+- \colorlet{shadecolor}{orange!15}
+- \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
+- \newcommand{\V}[1]{{\bm{{\MakeLowercase{#1}}}}}
+--- 
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library(quantmod)
+```
+# 6.3 
+
+# 6.4 
+
+# 6.5
+
+# 6.8 
