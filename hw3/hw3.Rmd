@@ -84,3 +84,8 @@ $$
 
 # 6.8 
 Use the Fama-French 100 portfolios in the last five years to construct 3 common factors via the PCA based on the correlation matrix. Report the variance explained by each principle components. Now, regress each of the Fama-French 100 portfolios on these 3 principal components and report the distribution (histogram) of the residual variances. Report also the distribution of the variance of these 100 portfolios over the same time period. 
+
+> First, we load the data: 
+
+> To see no
+
