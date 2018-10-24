@@ -38,16 +38,49 @@ header-includes:
 - \let\endoldquote=\endquote
 - \colorlet{shadecolor}{orange!15}
 - \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
-- \newcommand{\V}[1]{{\bm{{\MakeLowercase{#1}}}}}
+- \newcommand{\V}[1]{{\bm{{#1}}}}
 --- 
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
 library(quantmod)
 ```
 # 6.3 
+Let $\V{Y}_t$ be a vector of excess returns of $N$ assets. Consider the multivariate linear regression model: 
+$$
+\V{Y}_t = \alpha + \beta Y_t^m + \V{\epsilon}_t
+$$
+where $\V{\epsilon}_t \sim N(0, \V{\Sigma})$ and $cov(Y_t^m, \epsilon) = 0$. 
+
+1. Derive the MLE for $\V{\alpha}$ and $\V{\beta}$. You do not need to derive the MLE for $\V{\Sigma}$ since this part is hard. You just take for granted that $\V{\hat{\Sigma}}$ is the MLE.
+2. Show that the MLRT for the null hypothesis $H_0$: $\V{\alpha} = 0$ is:
+$$
+T_2 = T[\log{(|\hat{\Sigma}_0|)} - \log{(\hat{\Sigma})}]
+$$
+where $\V{\hat{\Sigma}}_0$ is the MLE under $H_0$. Give the expression for $\V{\hat{\Sigma}}_0$. 
+
 
 # 6.4 
+Consider the multifactor model: 
+$$
+\V{Y}_t = \V{\alpha} + \V{B}\V{X}_t + \V{\epsilon}_t
+$$
+with observable factor $\V{X}_t$ where $\mathbb{E}\V{\epsilon}_t =0$ and $cov(\V{X}_t, \V{\epsilon}_t) = 0$. 
+
+1. Based on the 20 stock portfolios over a period of 60 months on the 3 factors, it was computed that $|\V{\hat{\Sigma}}_0| = 2.375$ and $|\V{\hat{\Sigma}}| = 1.624$. Test if the multifactor model is consistent with the empirical data, $H_0: \alpha = 0$.
+2. Suppose that the beta's of the GE stock over the S&P500 index ($X_1$), the size effect $X_2$, and the book-to-market effect $X_3$ are respectively 1.3, 0.3, -0.4. Assume further that over the last 10 years the average risk-free interest is 4\%, the average return of the S&P500 is 11\%, the average difference of returns between the small large capitalization is 3\%, and the average difference of returns between the high and low book-to-market is 2\%, what is the expected return of the GE stock using the Fama-French model?
 
 # 6.5
+Consider the multi-factor model: 
+$$
+\V{Y}_t = \V{\alpha} + \V{B}\V{X}_t + \V{\epsilon}_t
+$$
+with observable factor $\V{X}_t$. 
+1. Suppose that the CAPM holds and over the last five years, the average of the risk-free interest rate is 3.5\% and the average return of the CRSP value-weighted index is 12.5\%. If the market $\beta$ of a stock (with respect to the index) is 1.3, what is the expected return of the stock? 
+2. Based on 15 stock portfolios over a period of 60 months regressed on five factors without knowing the risk-free interest rate, it is computed that $|\V{\hat{Sigma}}_0| = 2.425$ and $|\V{\hat{\Sigma}}| = 1.742$. Test if the multifactor model is consistent with the empirical data, $H_0: \alpha = 0$.  
+3. Suppose that the strict multi-factor model is correct so that var($\V{\epsilon}$) = $\V{\Sigma}_0$ is a diagonal matrix and $\V{X}_t$ and $\V{\epsilon}_t$ are uncorrelated. Show how to estimate the covariance matrix of $\V{Y}$ based on the past $T$ days' data:
+$$
+\{(\V{X}_t, \V{Y}_t): t = 1, \ldots, T\}
+$$
 
 # 6.8 
+Use the Fama-French 100 portfolios in the last five years to construct 3 common factors via the PCA based on the correlation matrix. Report the variance explained by each principle components. Now, regress each of the Fama-French 100 portfolios on these 3 principal components and report the distribution (histogram) of the residual variances. Report also the distribution of the variance of these 100 portfolios over the same time period. 
