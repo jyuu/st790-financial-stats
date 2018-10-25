@@ -24,6 +24,11 @@ Y = RiskFactors[801:2630,3:9]
 tmp = cor(RiskFactors[801:2630,2:9])
 tmp
 resid = resid(lsfit(X, Y))         # take the return of SP500 out
+
+# aside
+var1 <- resid %*% t(resid)
+hist(diag(var1), breaks = 50)
+
 cor(resid)
 cor(cbind(X,resid))
 eigen(cor(resid))
@@ -162,15 +167,25 @@ Y <- FF100[,2:101]
 resid <- resid(lsfit(X, Y))         # take the return of SP500 out
 cor(resid)
 cor(cbind(X,resid))
-# variance explained by each principle components
+# variance explained of the first three principle components
 p <- 100
-eigen(cor(resid))$values[1:3]/p
+eigen(cor(resid))$values[1:3]
+# proportion of total variability explained by the first 3 principle components
+eigen(cor(resid))$values[1:3]/p*100
 # regress each port on these 3 principal components 
 a <- eigen(cor(resid))$vectors[,1]
 a <- a / sqrt(apply(resid, 2, var))  	# standardize the variables
 Factor1 <- resid %*% a
 resid1 <- resid(lsfit(cbind(X, Factor1), Y))
+# get residual variances
+var1 <- resid1 %*% t(resid1)
+hist(diag(var1), breaks = 50)
+
+# dist of variance of these 100 portfolios 
+hist(apply(Y, 2, var)) 
+# use Rsq 
 Rsq1 <- 1-apply(resid1, 2, var)/apply(Y,2,var)
+hist(Rsq1)
 
 matplot(cbind(Rsq1, Rsq2, Rsq3), type="l", lwd=2, ylim=c(0,1), col=2:4)
 title("Percent of variability explained by  Factors")
