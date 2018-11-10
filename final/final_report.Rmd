@@ -1,0 +1,303 @@
+---
+output: 
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    template: ~/workspace/cv/git/svm-latex-ms.tex
+title: "ST790: Quantopian Final Project "
+# bibliography: /home/joyce/workspace/metar/ref2.bib
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+# spacing: double
+endnote: no
+header-includes:
+- \setlength{\abovedisplayskip}{.2pt}
+- \setlength{\belowdisplayskip}{.2pt}
+- \usepackage{placeins}
+- \usepackage{setspace}
+- \usepackage{chngcntr}
+- \usepackage{multicol}
+- \usepackage{lscape}
+- \counterwithin{figure}{section}
+- \counterwithin{table}{section}
+- \usepackage{mathrsfs}
+- \usepackage{mathtools}
+- \usepackage{multirow}
+- \newtheorem{theorem}{Theorem}
+- \usepackage[linesnumbered,algoruled,boxed,lined,commentsnumbered]{algorithm2e} 
+- \usepackage{bm}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+--- 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(reticulate)
+# library(dplyr)
+# library(truncdist)
+# library(ggplot2)
+```
+
+# Introduction 
+
+As fund managers, we were tasked with constructing a cross-sectional, long-short US equity strategy on [Quantopian](https://www.quantopian.com/). There were not many explicit constraints on the specific strategy we utilized, but it must pass the following criteria: (i) trade liquid stocks, (ii) have no more than 5\% of capital invested in any one asset, (iii) have no more than 10\% net dollar exposure, (iv) achieve mean daily turnover between 5\% and 65\% over a 63-trading-day rolling window, (v) attain gross leverage between 0.8x and 1.1x, (vi) have low correlation to the market, (vii) have less than 20\% exposed to each of the 11 sectors as defined on Quantopian, and (viii) result in positive returns. While the last return criteria was not a constraint we included in our optimization, we did design our algorithm with the rest of the seven criteria in mind.
+
+# Trading Strategy 
+
+The backtests we describe below are derived from the following trading algorithm: 
+
+1. Once a week, we choose a universe of liquid assets from $\texttt{QTradeableStocksUS}$ that pass the following filters: 
+    * It is not trading within 2 days of any earnings announcements as assets are generally more volatile within these dates. 
+    * It has not been announced as an acquistion target. To further reduce any possible volatility, we avoid acquisition targets as they often pose huge risk to quant strategies. 
+    * We are able to calculate a 5 day moving average of the bull-minus-bear signal from the $\texttt{StockTwits}$ API.
+2. Every day, we build an alpha vector for the universe of liquid assets filtered from our step above. The alpha model we use is quite simple: we rank the assets by its bull-to-bear intensity, averaged over the past 5 days as evaluated from $\texttt{StockTwits}$, and find a set of new portfolio weights that maximizes the sum of each asset's weight times this alpha value. Our objective defined in $\texttt{MaximizeAlpha}$ is thus simply a function of this sentiment datastream as we believe this ranking is similar to expected returns of each asset. As a result, our routine effectively goes long on assets with high bullish signal and short on those with a high bearish signal.  
+3. Once a week, we calculate the portfolio that maximizes the alpha-weighted sum of our position sizes, subject to the following constraints:
+    * Our portfolio maintains a gross leverage of, or less than, 1.0x. 
+    * Our portfolio has no more than 5\% in any single asset. 
+    * Our portfolio does not pass mean daily turnover of 80\%. 
+  
+With this simple strategy, we achieve the following leaderboard results at the end of our one-month trading period from November $1^{st}$ to November $30^{th}$: 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rllr}
+  \hline
+ & Metric & Our Result & Overall \\ 
+  \hline
+1 & rank & 64 & - \\ 
+  2 & name & Gray Fox & - \\ 
+  3 & score & 0.502 & 0.36 \\ 
+  4 & max\_beta\_to\_spy\_126day & 0.076 & 0.14 \\ 
+  5 & max\_cumulative\_common\_returns & 0.009 & 0.04 \\ 
+  6 & max\_leverage & 1.047 & 1.05 \\ 
+  7 & max\_max\_drawdown & 0 & -0.00 \\ 
+  8 & max\_net\_dollar\_exposure & 0.032 & 0.04 \\ 
+  9 & max\_total\_returns & 0.025 & 0.14 \\ 
+  10 & min\_total\_returns & -0.007 & -0.02 \\ 
+  11 & max\_turnover & 0.905 & 1.07 \\ 
+  12 & max\_volatility\_126day & 0.044 & 0.06 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+Key to our strategy is the output from the `bull_minus_bear` API call as it is this signal that is fed into the optimization function and this result that determines the order size of each asset. While we do not have exact clarity on the natural language processing engine that calculates the bullish intensity and bearish intensity of a stock, we do know how the `bull_minus_bear` signal arises; traders attached either a bull emoji or a bear emoji to any message they release on the `StockTwits` platform as well as a ticker symbol that identifies which asset is under discussion. While traders attached a clear label to the asset of interest, `StockTwits` also has an in-house proprietary algorithm that processes some of the language in the message to ascribe an intensity level of the bull or bear indicator. Messages across the `StockTwits` platform is thus aggregated to arrive a sentiment score that is a function of subtracting the bearish intensity from the bullish intensity result. 
+
+## Choice of the sentiment score
+
+In addition to the ease of implementation, we chose to rely on the sentiment factor as it provides 
+- nice characteristics
+- predictive over X days 
+- should we rebalance every time new day 
+- make use of longer forecast horizon 
+- if rebalance too often get slippage 
+- take the 5 day average, like trading 1/5 of factor each day 
+- we initally screened our pipeline factor from 01 2010 to jan 2017 
+- look at how information coefficient (rank correlation between predictions and the n-days forward returns) changes in the days after we get a fresh signal 
+- as shown by this plot, "control turnover to reduce slippage "
+- "might not get full exposureto factor when signal is available "
+- "make sure to build exposure towards factor"
+- "need to know how long alpha is good for" when it is not 
+- cumulative alpah good, highest on day X 
+and decay after
+- if we fail to get full exposure on day 1, we lose a lot of predictive power
+- if linger on too long, can hurt our portoflio 
+- "it has a shortcoming: it is only showing the IC of between the forecast and the total stock returns"
+"hus, we do not just want to know how predictive the factor is for total returns, but also how predictive it is for specific returns" 
+- " stock returns where we subtract out the common risk contributions"
+
+- Are there persistent exposures to risk factors? We would see this by the distribution (represented by the box-and-whiskers plot) being shifted to the left or right of zero for a single risk factor. 
+
+"How much does exposure vary over time? This is represented by the width of the distribution and indicates factor timing: you are not just keeping a constant exposure but varying it over time (while still averaging out close to 0). There seems to be some of that going on here, specifically for size."
+-
+"A constant exposure is usually indicative of overfitting, it is quite simple to get a great looking factor by going long momentum and short value the last two years, for example."
+
+"The ideal factor would have very low exposures and get most of its returns from specific exposure, although that is not always possible."
+"As you can see, the part that is most positive in terms of cumulative returns come from specific exposures, while other risk bets do not contribute much to the overall positive performance - great!"
+
+"look at where the volatility comes from. To contrast with the previous plot, you can see that while we get a huge boost from common returns, the returns are mainly driven by specificic returns, they are just not going up as much."
+
+""
+
+
+rank assets basedo n trader mood 
+run our pipeline over period of time 
+
+## Building strategy 
+confirm our pipeline 
+
+- fundamental value measures? 
+- analyzed  bull and bear tagged messages on each asset 
+
+# Sentiment
+- looking at relative frequency of words falling under various themes 
+- SW uses cashtags with stock ticker symbol, like hashtag, to index ppls thoughts and ideas about the company and stock 
+- understand that anything from social media, or anything market or finance related comes with its fair share of BS
+- stockTwits is no exception 
+- people "BuY right now".. claiming they made excessive gains 
+-  
+- feed stence into algo and know how people are "feeling"
+- rely on a pretty sophistic natural language processing engine 
+can parse through online market conversations 
+that can detect trader moods bullishness and bearishnes  and intensity 
+
+algorithm rules 
+- 
+# 
+
+
+# Trading Strategy 
+
+# November Portfolio Performance 
+
+The following displays my portfolio performance between Nov 1 and Nov 30 
+
+# Back Testing
+
+Shown for three different time periods in the 21st century: 
+- 2000-2002
+- 2008-2010
+- 2015-2018  # this doesnt work bc of stocktwits limitation 
+
+since we rely on pyschsignal.stocktwits
+2007-01-01 to 2018-10-30 
+
+
+
+# Discussion 
+
+returns, positions, leverage, risk, control 
+
+
+# Also make a poster and print! 
+
+# Appendix 
+
+## Quantopian Submission
+
+```{python, eval = FALSE}
+# Import Algorithm API functions
+from quantopian.algorithm import (
+    attach_pipeline,
+    pipeline_output,
+    order_optimal_portfolio,
+)
+
+# Import Optimize API module
+import quantopian.optimize as opt
+
+# Pipeline imports
+from quantopian.pipeline import Pipeline
+from quantopian.pipeline.data.psychsignal import stocktwits
+from quantopian.pipeline.factors import SimpleMovingAverage
+
+
+# Import built-in universe and Risk API method
+from quantopian.pipeline.filters import QTradableStocksUS
+from quantopian.pipeline.experimental import risk_loading_pipeline
+
+# Get event data 
+from quantopian.pipeline.factors.eventvestor import (
+    BusinessDaysUntilNextEarnings,
+    BusinessDaysSincePreviousEarnings,
+)
+from quantopian.pipeline.filters.eventvestor import IsAnnouncedAcqTarget
+from quantopian.pipeline.factors import BusinessDaysSincePreviousEvent
+
+def initialize(context):
+    # Constraint parameters
+    context.max_leverage = 1.0
+    context.max_pos_size = 0.05
+    context.max_turnover = 0.8
+
+    # Attach data pipelines
+    attach_pipeline(
+        make_pipeline(),
+        'data_pipe'
+    )
+    attach_pipeline(
+        risk_loading_pipeline(),
+        'risk_pipe'
+    )
+
+    # Schedule rebalance function
+    schedule_function(
+        rebalance,
+        date_rules.week_start(),
+        time_rules.market_open(),
+    )
+
+
+def before_trading_start(context, data):
+    # Get pipeline outputs and
+    # store them in context
+    context.output = pipeline_output('data_pipe')
+
+    context.risk_factor_betas = pipeline_output('risk_pipe')
+
+
+# Pipeline definition
+def make_pipeline():
+   
+    not_near_earnings = ~((BusinessDaysUntilNextEarnings() <= 2) |
+      (BusinessDaysSincePreviousEarnings() <= 2)) 
+    
+    not_acq_tar = ~IsAnnouncedAcqTarget()
+    
+    universe = (
+        QTradableStocksUS()
+        & not_near_earnings
+        & not_acq_tar
+    )
+    
+    sentiment_score = SimpleMovingAverage(
+        inputs=[stocktwits.bull_minus_bear],
+        window_length=5,
+        mask=universe
+    )
+
+    return Pipeline(
+        columns={
+            'sentiment_score': sentiment_score,
+        },
+        screen=sentiment_score.notnull()
+    )
+
+
+def rebalance(context, data):
+    # Create MaximizeAlpha objective using
+    # sentiment_score data from pipeline output
+    objective = opt.MaximizeAlpha(
+      context.output.sentiment_score
+    )
+
+    # Create position size constraint
+    constrain_pos_size = opt.PositionConcentration.with_equal_bounds(
+        -context.max_pos_size,
+        context.max_pos_size
+    )
+
+    # Constrain target portfolio's leverage
+    max_leverage = opt.MaxGrossExposure(context.max_leverage)
+
+    # Constrain portfolio turnover
+    max_turnover = opt.MaxTurnover(context.max_turnover)
+
+    # Constrain target portfolio's risk exposure
+    factor_risk_constraints = opt.experimental.RiskModelExposure(
+        context.risk_factor_betas,
+        version=opt.Newest
+    )
+
+    # Rebalance portfolio using objective
+    # and list of constraints
+    order_optimal_portfolio(
+        objective=objective,
+        constraints=[
+            max_leverage,
+            constrain_pos_size,
+            max_turnover,
+            factor_risk_constraints,
+        ]
+    )
+```
