@@ -52,7 +52,7 @@ The backtests we describe below are derived from the following trading algorithm
 
 1. Once a week, we choose a universe of liquid assets from $\texttt{QTradeableStocksUS}$ that pass the following filters: 
     * It is not trading within 2 days of any earnings announcements as assets are generally more volatile within these dates. 
-    * It has not been announced as an acquistion target. To further reduce any possible volatility, we avoid acquisition targets as they often pose huge risk to quant strategies. 
+    * It has not been announced as an acquisition target. To further reduce any possible volatility, we avoid acquisition targets as they often pose huge risk to quant strategies. 
     * We are able to calculate a 5 day moving average of the bull-minus-bear signal from the $\texttt{StockTwits}$ API.
 2. Every day, we build an alpha vector for the universe of liquid assets filtered from our step above. The alpha model we use is quite simple: we rank the assets by its bull-to-bear intensity, averaged over the past 5 days as evaluated from $\texttt{StockTwits}$, and find a set of new portfolio weights that maximizes the sum of each asset's weight times this alpha value. Our objective defined in $\texttt{MaximizeAlpha}$ is thus simply a function of this sentiment datastream as we believe this ranking is similar to expected returns of each asset. As a result, our routine effectively goes long on assets with high bullish signal and short on those with a high bearish signal.  
 3. Once a week, we calculate the portfolio that maximizes the alpha-weighted sum of our position sizes, subject to the following constraints:
