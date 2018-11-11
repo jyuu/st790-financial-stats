@@ -84,7 +84,7 @@
   
   
   
-  \author{}
+  \author{\Large \vspace{0.05in} \newline\normalsize\emph{}  }
   
   
   \date{}
@@ -123,7 +123,7 @@
 \makeatother
 \hypersetup{breaklinks=true,
 bookmarks=true,
-pdfauthor={},
+pdfauthor={ ()},
 pdfkeywords = {},  
 pdftitle={ST790: Quantopian Final Project},
 colorlinks=true,
@@ -177,7 +177,7 @@ pdfborder={0 0 0}}
 
 {
   \vskip 13.5pt\relax \normalsize\fontsize{11}{12} 
-   
+  \textbf{\authorfont } \hskip 15pt \emph{\small }   
   
 }
 
@@ -264,6 +264,8 @@ With this simple strategy, we achieve the following leaderboard results
 at the end of our one-month trading period from November \(1^{st}\) to
 November \(30^{th}\):
 
+\newpage
+
 \begin{table}[ht]
 \small
 \centering
@@ -312,26 +314,27 @@ sentiment factor as it seems to have some good characteristics, namely:
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  \emph{Predictive alpha} We calculated the mean information coefficient
-  using the built-in function in \texttt{alphalens} and found our
-  sentiment signal matches the direction of actual asset returns. As
-  shown in the top-left of the figure below, we only get the full
-  exposure of this factor 5 days after this signal becomes available. In
-  fact, prior to 5 trading days, it appears the signal hurts us, in that
-  its forecast is negative. Counterintuitively, after we cross 5 trading
-  days, it appears our sentiment factor gains more predictive power.
-  This is further corroborated in the top-right graph in that returns
-  are highest when the signal is delayed by four days. Given this
-  characteristic, we may want to build greater exposure to this factor
-  since it still benefits us after 10 trading days. We can also leverage
-  the positive effects of this factor by increasing our turnover
-  constraints as it appears it does not hurt our portfolio to keep in
-  there for a longer period of time. Nevertheless, the mean information
-  coefficient still lingers around 0, suggesting the forecasting
-  benefits provided by our sentiment factor may be no better than the
-  results we get from randomly selecting our asset weights.
+  \textbf{Predictive alpha} We calculated the mean information
+  coefficient using the built-in function in \texttt{alphalens} and
+  found our sentiment signal matches the direction of actual asset
+  returns. As shown in the top-left of the figure below, we only get the
+  full exposure of this factor 5 days after this signal becomes
+  available. In fact, prior to 5 trading days, it appears the signal
+  hurts us, in that its forecast is negative. Counterintuitively, after
+  we cross 5 trading days, it appears our sentiment factor gains more
+  predictive power. This is further corroborated in the top-right graph
+  in that returns are highest when the signal is delayed by four days.
+  Given this characteristic, we may want to build greater exposure to
+  this factor since it still benefits us after 10 trading days. We can
+  also leverage the positive effects of this factor by increasing our
+  turnover constraints as it appears it does not hurt our portfolio to
+  keep in there for a longer period of time. Nevertheless, the mean
+  information coefficient across the time frame displayed still lingers
+  around 0, suggesting the forecasting benefits provided by our
+  sentiment factor may be no better than the results we get from
+  randomly selecting our asset weights.
 \item
-  \emph{Low exposures} We quantified the exposures via the
+  \textbf{Low exposures} We quantified the exposures via the
   \texttt{perf\_attrib} function in \texttt{pyfolio}. As shown in the
   bottom-left, our sentiment factor appears to have relatively low
   exposures throughout, with most of the returns from volatility risk.
@@ -372,11 +375,122 @@ methods.
 
 \section{Backtesting}\label{backtesting}
 
-Given the extensive literature that sentiment data can predict stock
-price, we forged ahead and submitted our trading strategy on Quantopian.
-The back test results
+Despite the contradictory results from our initial explorations of our
+sentiment index appeared to indicate, given the extensive literature
+that exists on sentiment data predicting stock price, we forged ahead
+and backtested our trading strategy on Quantopian. The backtests for the
+period between January 2015 and August 2015 are shown below. Attempts
+were made to obtain backtest results for a longer, more representative,
+period that reflects the market today, but there were issues obtaining
+it through the backtesting platform on \texttt{Quantopian}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{/home/joyce/workspace/st790-financial-stats/final/structural} 
+
+}
+
+\caption{Total and specific returns of our trading strategy between January and August 2015.}\label{fig:unnamed-chunk-3}
+\end{figure}
+
+While our exploratory analyses in Figure 1 suggests most of our returns
+are from common risk factors, when backtested in the period of 2015, we
+find that most of our cumulative returns are from specific
+returns--returns that are attributable to our trading strategy
+(Mackenzie \protect\hyperlink{ref-Quant}{2018}). Moreover, as desired,
+our algorithm can be characterized as a momentum strategy, which has
+time over time demonstrated profitability (Jegadeesh and Titman
+\protect\hyperlink{ref-Jeg}{2002}). In fact, a number of authors, Hong
+and Stein (\protect\hyperlink{ref-Hong}{2002}), has shown behavioral
+models that explain how momentum profits arise from how investors
+interpret data. They even go as far as demonstrating the advantages in
+longer holding periods, resulting from delayed overreaction to news that
+further push the prices of winners (or pull the prices of losers) from
+their long-term values as our initial analyses imply.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{/home/joyce/workspace/st790-financial-stats/final/style} 
+
+}
+
+\caption{Exposure to investing styles assessed from a rolling 63-day mean. The 5 different investing styles presented are: momentum (light blue), volatility (dark blue), size (orange), value (gray) and short term reversal (purple).}\label{fig:unnamed-chunk-4}
+\end{figure}
+
+In Figure 4, our predominantly momentum-based strategy appears to have
+negative beta to the market. While we should seek to build an algorithm
+that has low beta in general, this negative beta might actually benefit
+us during our set trading window of November since the market has been
+trending down for the entire month of October. As this beta from our
+simple OLS estimator is particularly sensitive to different time
+periods, we should also have considered using more sophisticated
+estimation methods like a shrinkage estimator where we could include
+some prior belief on how we think the asset beta should behave.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{/home/joyce/workspace/st790-financial-stats/final/beta} 
+
+}
+
+\caption{Rolling beta to SPY calculated on a 6 month rolling basis. A small window is shown since our backtest range is relatively short, and this metric can only be assessed 6-months after our initial backtest date.}\label{fig:unnamed-chunk-5}
+\end{figure}
+
+Given the constraints we fed in our \texttt{optimize} API call, we are
+able to achieve the desired leverage, turnover and net dollar exposure
+in order for our trading strategy to remain on the \texttt{Quantopian}
+platform. As shown in Figure 5, the leverage remains between the 0.8x
+and 1.1x thresholds. In Figure 6, the absolute net dollar exposure is
+below the 10\% requirement. And in Figure 7, the turnover is below 65\%
+cutoff. Since we pass all the constraints, we submit our sentiment based
+strategy to the contest.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{/home/joyce/workspace/st790-financial-stats/final/leverage} 
+
+}
+
+\caption{Gross leverage calculated as a function of the current portfolio value to its capital base.}\label{fig:unnamed-chunk-6}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{/home/joyce/workspace/st790-financial-stats/final/netdollar} 
+
+}
+
+\caption{Net dollar exposure calculated by total value of our strategy's long and short positions.}\label{fig:unnamed-chunk-7}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{/home/joyce/workspace/st790-financial-stats/final/turnover} 
+
+}
+
+\caption{Total turnover rate calculated over a rolling window of 63 days.}\label{fig:unnamed-chunk-8}
+\end{figure}
 
 \section{Evaluation}\label{evaluation}
+
+The following displays our portfolio performance between Nov 1 and Nov
+30:
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{/home/joyce/workspace/st790-financial-stats/final/submission} 
+
+}
+
+\caption{Quantopian score during November trading period.}\label{fig:unnamed-chunk-9}
+\end{figure}
+
+As shown, we performed relatively well in that our strategy ranked 66
+out of 266 competitors on the platform. We attribute the success of this
+simple strategy to its exposure to momentum, low turnover, and negative
+beta, which has benefitted us in the current market where there has been
+general downward trend and high volatility in asset prices.
 
 \section{Future Improvement}\label{future-improvement}
 
@@ -385,70 +499,63 @@ simplistic approach:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\tightlist
 \item
-  \emph{Using non-trading day sentiment data}: While we relied on what
-  was provided to us by \texttt{Stocktwits} we should attempt building
-  our own classifier from possiblilty richer sources of messages (e.g.,
-  Weibo, Twitter) that can not only provide
+  \emph{Building a classifier from scratch}: While we relied on what was
+  provided to us by \texttt{StockTwits}, we should attempt to build our
+  own classifier from possibly richer sources of messages (e.g., Weibo,
+  Twitter) that can provide greater clarity on how the bull and bear
+  signals arise. With a number of public posts available on how
+  \texttt{StockTwits} data is utilized (Capital
+  \protect\hyperlink{ref-Nairu2018}{2018}; StockTwits
+  \protect\hyperlink{ref-Stocktwits2015}{2015}), there may be more
+  rigorous models available that capture the bull and bear signal. For
+  example, one company, Social Market Analytics, arrives at a sentiment
+  score by taking the difference between the number of bullish messages
+  and bearish messages of an asset and normalizes it by the total number
+  of messages available (Smith \protect\hyperlink{ref-Smith2018}{2017}).
+  The problem with just looking at the relative frequency of bull and
+  bear messages on social media is that the data comes with its fair
+  share of noise. Users each have their own agenda in which they might
+  make excessive claims about a particular asset, so more sophisticated
+  metrics should be designed to parse through these online market
+  conversations. A possible avenue includes borrowing concepts from
+  topic modeling to develop finite mixture models that arrive at a more
+  reflective distribution of positive and negative sentiment of an
+  asset, other unsupervised or supervised methods can also be
+  considered, as well as the fact that we can now use non-trading day
+  sentiment data to inform how investors feel about a stock.
+\item
+  \emph{Include fundamental factors}: Given the extensive literature on
+  factor modeling (Fan and Yao \protect\hyperlink{ref-Fan2015}{2015}),
+  we should consider including these time-tested metrics and ratios,
+  like market cap and book-to-price, that have captured the financial
+  characteristics of an asset. We can start with the typical (i) SMB,
+  excess return of small market cap minus big market cap companies, (ii)
+  HML, excess return of companies with high book-to-price against low
+  book-to-price ratios, and (iii) MOM, excess return of companies that
+  overperformed to those that underperformed, and study how the
+  inclusion of these factors along with our sentiment index might affect
+  returns. We might even find that some factors are more efficient than
+  others, so swapping them in for our sentiment index might be
+  necessary. Once we understand exactly how much we are exposed to
+  specific factors, given the lack of predictability in the market in
+  general, we should consider beta hedging to avoid any big dependencies
+  on performance on a certain factor. This essentially entails taking
+  the exposure \(\beta\) we have to a factor and shorting it by the
+  proportional value of our total portfolio \(\beta M\).
+\item
+  \emph{More comprehensive exploratory data analysis}: There are basic
+  steps we should have carried out prior to executing our strategy on
+  \texttt{Quantopian}. Namely, we should have checked for normality,
+  homoskedasticity, and autocorrelation in our model, as violations
+  results in parameters that often biased, inconsistent and inefficient
+  in the context of regression. If these assumptions hold, then we can
+  actually normalize our factor values, allowing for them to be easily
+  comparable across all assets and its different factors. If the
+  assumptions hold weakly, we might consider transformations or
+  techniques, like Winsorization, that will still allow us to build a
+  robust statistical model for trading.
 \end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  fundamental value measures?
-\item
-  analyzed bull and bear tagged messages on each asset
-\end{itemize}
-
-\section{Sentiment}\label{sentiment}
-
-\begin{itemize}
-\item
-  looking at relative frequency of words falling under various themes
-\item
-  SW uses cashtags with stock ticker symbol, like hashtag, to index ppls
-  thoughts and ideas about the company and stock
-\item
-  understand that anything from social media, or anything market or
-  finance related comes with its fair share of BS
-\item
-  stockTwits is no exception
-\item
-  people ``BuY right now''.. claiming they made excessive gains
-\item
-\item
-  feed stence into algo and know how people are ``feeling''
-\item
-  rely on a pretty sophistic natural language processing engine can
-  parse through online market conversations that can detect trader moods
-  bullishness and bearishnes and intensity
-\end{itemize}
-
-\subsection{algorithm rules}\label{algorithm-rules}
-
-\section{}\label{section}
-
-\section{Trading Strategy}\label{trading-strategy-1}
-
-\section{November Portfolio
-Performance}\label{november-portfolio-performance}
-
-The following displays my portfolio performance between Nov 1 and Nov 30
-
-\section{Back Testing}\label{back-testing}
-
-Shown for three different time periods in the 21st century: - 2000-2002
-- 2008-2010 - 2015-2018 \# this doesnt work bc of stocktwits limitation
-
-since we rely on pyschsignal.stocktwits 2007-01-01 to 2018-10-30
-
-\section{Discussion}\label{discussion}
-
-returns, positions, leverage, risk, control
-
-\section{Also make a poster and
-print!}\label{also-make-a-poster-and-print}
 
 \section{Appendix}\label{appendix}
 
@@ -561,6 +668,38 @@ print!}\label{also-make-a-poster-and-print}
 \NormalTok{    )}
 \end{Highlighting}
 \end{Shaded}
+
+\section{References}\label{references}
+
+\noindent 
+
+\hypertarget{refs}{}
+\hypertarget{ref-Nairu2018}{}
+Capital, N. (2018), ``Using google trends to predict stocks.''
+
+\hypertarget{ref-Fan2015}{}
+Fan, J., and Yao, Q. (2015), \emph{The elements of financial
+econometrics}, Science Press.
+
+\hypertarget{ref-Hong}{}
+Hong, L., Harrison, and Stein, J. (2002), ``Bad news travels slowly:
+Size, analyst coverage and profitability of momentum strategies,'' The
+Journal of Finance, 15.
+
+\hypertarget{ref-Jeg}{}
+Jegadeesh, N., and Titman, S. (2002), ``Profitability of momentum
+strategies: An evaluation of alternative explanations,'' The Journal of
+Finance.
+
+\hypertarget{ref-Quant}{}
+Mackenzie, D. (2018), ``Difference between specific and total returns.''
+
+\hypertarget{ref-Smith2018}{}
+Smith, C. (2017), ``StockTwits sentiment analysis.''
+
+\hypertarget{ref-Stocktwits2015}{}
+StockTwits (2015), ``The remarkable relationship between sentiment and
+your favorite stock's earnings.''
 \newpage
 \singlespacing 
 \end{document}
