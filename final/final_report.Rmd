@@ -60,6 +60,7 @@ The backtests we describe below are derived from the following trading algorithm
 With this simple strategy, we achieve the following leaderboard results at the end of our one-month trading period from November $1^{st}$ to November $30^{th}$: 
 
 \begin{table}[ht]
+\small
 \centering
 \begin{tabular}{rllr}
   \hline
@@ -85,46 +86,33 @@ Key to our strategy is the output from the `bull_minus_bear` API call as it is t
 
 ## Choice of the sentiment score
 
-In addition to the ease of implementation, we chose to rely on the sentiment factor as it provides 
-- nice characteristics
-- predictive over X days 
-- should we rebalance every time new day 
-- make use of longer forecast horizon 
-- if rebalance too often get slippage 
-- take the 5 day average, like trading 1/5 of factor each day 
-- we initally screened our pipeline factor from 01 2010 to jan 2017 
-- look at how information coefficient (rank correlation between predictions and the n-days forward returns) changes in the days after we get a fresh signal 
-- as shown by this plot, "control turnover to reduce slippage "
-- "might not get full exposureto factor when signal is available "
-- "make sure to build exposure towards factor"
-- "need to know how long alpha is good for" when it is not 
-- cumulative alpah good, highest on day X 
-and decay after
-- if we fail to get full exposure on day 1, we lose a lot of predictive power
-- if linger on too long, can hurt our portoflio 
-- "it has a shortcoming: it is only showing the IC of between the forecast and the total stock returns"
-"hus, we do not just want to know how predictive the factor is for total returns, but also how predictive it is for specific returns" 
-- " stock returns where we subtract out the common risk contributions"
+In addition to the ease of implementation, we chose to rely on the sentiment factor as it seems to have some good characteristics, namely: 
 
-- Are there persistent exposures to risk factors? We would see this by the distribution (represented by the box-and-whiskers plot) being shifted to the left or right of zero for a single risk factor. 
+1. *Predictive alpha* We calculated the mean information coefficient using the built-in function in `alphalens` and found our sentiment signal matches the direction of actual asset returns. As shown in the top-left of the figure below, we only get the full exposure of this factor 5 days after this signal becomes available. In fact, prior to 5 trading days, it appears the signal hurts us, in that its forecast is negative. Counterintuitively, after we cross 5 trading days, it appears our sentiment factor gains more predictive power. This is further corroborated in the top-right graph in that returns are highest when the signal is delayed by four days. Given this characteristic, we may want to build greater exposure to this factor since it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Nevertheless, the mean information coefficient still lingers around 0, suggesting the forecasting benefits provided by our sentiment factor may be no better than the results we get from randomly selecting our asset weights. 
 
-"How much does exposure vary over time? This is represented by the width of the distribution and indicates factor timing: you are not just keeping a constant exposure but varying it over time (while still averaging out close to 0). There seems to be some of that going on here, specifically for size."
--
-"A constant exposure is usually indicative of overfitting, it is quite simple to get a great looking factor by going long momentum and short value the last two years, for example."
+2. *Low exposures* We quantified the exposures via the `perf_attrib` function in `pyfolio`. As shown in the bottom-left, our sentiment factor appears to have relatively low exposures throughout, with most of the returns from volatility risk. However, there does appear to be persistent exposure to value and short term reversal, in that it is shifted to the left of zero; and persistent exposure to size and momentum, in that it is shifted to the right of zero. Ideally, we would choose a factor that doesn't display this skew, but the skew does not appear too large. We also benefit from the fact that the width of each of our box and whisker plots are not that wide, so our exposures do not vary much over time. Yet, this analysis was conducted only over the available sentiment signal in 2018, so there may be other extended periods prior to 2018 in which our factor over or underperforms. Given what we have here, we may want to identify asset classes to include in our portfolio that would offset the exposure risks identified above. 
 
-"The ideal factor would have very low exposures and get most of its returns from specific exposure, although that is not always possible."
-"As you can see, the part that is most positive in terms of cumulative returns come from specific exposures, while other risk bets do not contribute much to the overall positive performance - great!"
-
-"look at where the volatility comes from. To contrast with the previous plot, you can see that while we get a huge boost from common returns, the returns are mainly driven by specificic returns, they are just not going up as much."
-
-""
+Unfortunately, when we examine our exposures through cumulative returns and volatility, we find that our sentiment factor may not be as strong as we desired. As shown by the left bar graph (bottom-right), most of our returns are obtained from exposure to common risk factors, and, as shown in the right bar graph, are in fact driven by these common risk factors. Ideally, we would like to strip away the contribution from these common risk factors as portfolio performance from this exposure can easily be replicated from ETFs or other easy, cost-effective methods.  
 
 
-rank assets basedo n trader mood 
-run our pipeline over period of time 
+```{r, echo = FALSE, fig.align = "center", out.width="80%",fig.cap = "Examination of (top-right) information coefficient averaged over all possible asset returns, (top-left) cumulative returns when factor is delayed, (bottom-left) risk exposures, and (bottom-right) cumulative returns and volatility."}
+knitr::include_graphics("/home/joyce/workspace/st790-financial-stats/final/download2.png")
+```
 
-## Building strategy 
-confirm our pipeline 
+\newpage 
+
+# Backtesting
+
+Given the extensive literature that sentiment data can predict stock price, we forged ahead and submitted our trading strategy on Quantopian. The back test results 
+
+# including returns, positions, leverage, risk control
+# Evaluation 
+
+# Future Improvement 
+
+There are a number of avenues we might consider to improve upon our simplistic approach:
+
+1. *Using non-trading day sentiment data*: While we relied on what was provided to us by `Stocktwits` we should attempt building our own classifier from possiblilty richer sources of messages (e.g., Weibo, Twitter) that can not only provide
 
 - fundamental value measures? 
 - analyzed  bull and bear tagged messages on each asset 
