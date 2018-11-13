@@ -152,7 +152,7 @@ $$
 var(\bar{X}) \approx T^{-1} [\gamma(0) + 2\sum_{h=1}^L \gamma(h)]
 $$
 
-> some of idnendepnt terms 
+\newpage 
 
 # 7.3
 Draw 10,000 random portfolios of size $p=100$ with gross exposure $c=1.6$ from (7.9). Plot the weights ($w_1, w_2$) and ($w_{99}, w_{100}$). 
@@ -290,11 +290,11 @@ title("Daily volatility of SP500 Returns")
 plot(sqrt(Sigma[2,2,]), type="l", col=4, xlab = "")
 title("SD of changes of exchange rates")
 
-plot(leverage, type="l", col=4, ylim=c(-1,0), xlab = "")
-title("Correlation of SPX returns and exchange rates")
+plot(leverage, type="l", col=4, ylim=c(-.7,.8), xlab = "")
+title("Correlation SPX and exchange")
 
-plot(leverage, Sigma[2,1,], type="l", col=4, xlab = "")
-title("Covariance of SPX returns and exchange rates")
+plot(Sigma[2,1,], type="l", col=4, xlab = "")
+title("Covariance SPX and exchange")
 ```
 
 > Using the second projection method, we want to compute:
