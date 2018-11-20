@@ -118,8 +118,10 @@ Suppose that we have 100 investable stocks, labeled as 1 through 100 and classif
 1. the "health stocks" are no more than 15\% and "energy stocks" are no more than 30\%. 
 
 2. no exposure to Telecommunications. 
+
 3. exposure to "Consumer durables" but gross exposure is zero. 
 
+\newpage
 
 # 7.12 
 
