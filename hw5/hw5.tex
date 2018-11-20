@@ -223,9 +223,27 @@ We can show the solution to 7.18 is given by 7.17 since: \[
 &= tr(\hat{{\bm{{\Sigma}}}}\hat{{\bm{{\Sigma}}}}^T) - tr(\hat{{\bm{{\Sigma}}}} {\bm{{S}}}^T) - tr({\bm{{S}}} \hat{{\bm{{\Sigma}}}}^T) + tr({\bm{{S}}}{\bm{{S}}}^T) \\
 &= tr(\hat{{\bm{{\Sigma}}}} \hat{{\bm{{\Sigma}}}}^T) - 2tr(\hat{{\bm{{\Sigma}}}} {\bm{{S}}}^T) +  tr({\bm{{S}}}{\bm{{S}}}^T) 
 \end{aligned}
-\] Taking the derivation of this relative to \(\hat{{\bm{{\Sigma}}}}\)
-results in \(2\hat{{\bm{{\Sigma}}}} - 2{\bm{{S}}} = 0\) which leads to
-7.17 in which: \[
+\] Since we eventually want to constrain \({\bm{{S}}}\) to positive
+definite matrices, let's represent \({\bm{{S}}}\) as
+\({\bm{{V}}}{\bm{{V}}}^T\), leading to: \[
+\begin{aligned}
+tr(\hat{{\bm{{\Sigma}}}} \hat{{\bm{{\Sigma}}}}^T) - 2tr(\hat{{\bm{{\Sigma}}}} {\bm{{S}}}{\bm{{S}}}^T) +  tr({\bm{{V}}}{\bm{{V}}}^T{\bm{{V}}}{\bm{{V}}}^T) 
+\end{aligned}
+\] Taking the derivative of this relative to \({\bm{{V}}}\) results in
+\(-4{\bm{{V}}}^T\hat{{\bm{{\Sigma}}}} + 4{\bm{{V}}}^T{\bm{{V}}}{\bm{{V}}}^T = 0\).
+We can simplify and solve this by letting
+\({\bm{{V}}} = \Gamma^T ({\Lambda}^+)^{1/2}\). Since our covariance
+matrix is symmetric and can be broken down into
+\(\Gamma^T \Lambda \Gamma\), then: \[
+\begin{gathered}
+-4[(\Lambda^+)^{1/2} \Gamma \Gamma^T (\Lambda^+ + \Lambda^-)\Gamma] + 4(\Lambda^+)^{1/2}\Gamma \Gamma^T (\Lambda^+)^{1/2} (\Lambda^+)^{1/2} \Gamma \\ 
+-4[(\Lambda^+)^{1/2} (\Lambda^+ + \Lambda^-) \Gamma] + 
+4(\Lambda^+)^{1/2} \Lambda^+ \Gamma \\ 
+ -4[(\Lambda^+)^{1/2}\Lambda^+ \Gamma ] + 4 (\Lambda^+)^{1/2} \Lambda^+\Gamma  
+\end{gathered}
+\] Our positive definite matrice \({\bm{{S}}} = {\bm{{V}}}{\bm{{V}}}^T\)
+thus minimizes the function, which can also be represented by 7.17
+where: \[
 \hat{{\bm{{\Sigma}}}}^+ = {\bm{{\Lambda}}}^T diag(\lambda_1^+, \ldots, \lambda_p^+) {\bm{{\Lambda}}}
 \]
 
@@ -268,7 +286,6 @@ of the portfolio.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\tightlist
 \item
   the ``health stocks'' are no more than 15\% and ``energy stocks'' are
   no more than 30\%.

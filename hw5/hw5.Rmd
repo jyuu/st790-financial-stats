@@ -63,7 +63,22 @@ $$
 &= tr(\hat{\V{\Sigma}} \hat{\V{\Sigma}}^T) - 2tr(\hat{\V{\Sigma}} \V{S}^T) +  tr(\V{S}\V{S}^T) 
 \end{aligned}
 $$
-Taking the derivation of this relative to $\hat{\V{\Sigma}}$ results in $2\hat{\V{\Sigma}} - 2\V{S} = 0$ which leads to 7.17 in which:
+Since we eventually want to constrain $\V{S}$ to positive definite matrices, let's represent $\V{S}$ as $\V{V}\V{V}^T$, leading to:
+$$
+\begin{aligned}
+tr(\hat{\V{\Sigma}} \hat{\V{\Sigma}}^T) - 2tr(\hat{\V{\Sigma}} \V{S}\V{S}^T) +  tr(\V{V}\V{V}^T\V{V}\V{V}^T) 
+\end{aligned}
+$$
+Taking the derivative of this relative to $\V{V}$ results in $-4\V{V}^T\hat{\V{\Sigma}} + 4\V{V}^T\V{V}\V{V}^T = 0$. We can simplify and solve this by letting $\V{V} = \Gamma^T ({\Lambda}^+)^{1/2}$. Since our covariance matrix is symmetric and can be broken down into $\Gamma^T \Lambda \Gamma$, then: 
+$$
+\begin{gathered}
+-4[(\Lambda^+)^{1/2} \Gamma \Gamma^T (\Lambda^+ + \Lambda^-)\Gamma] + 4(\Lambda^+)^{1/2}\Gamma \Gamma^T (\Lambda^+)^{1/2} (\Lambda^+)^{1/2} \Gamma \\ 
+-4[(\Lambda^+)^{1/2} (\Lambda^+ + \Lambda^-) \Gamma] + 
+4(\Lambda^+)^{1/2} \Lambda^+ \Gamma \\ 
+ -4[(\Lambda^+)^{1/2}\Lambda^+ \Gamma ] + 4 (\Lambda^+)^{1/2} \Lambda^+\Gamma  
+\end{gathered}
+$$
+Our positive definite matrice $\V{S} = \V{V}\V{V}^T$ thus minimizes the function, which can also be represented by 7.17 where:
 $$
 \hat{\V{\Sigma}}^+ = \V{\Lambda}^T diag(\lambda_1^+, \ldots, \lambda_p^+) \V{\Lambda}
 $$
