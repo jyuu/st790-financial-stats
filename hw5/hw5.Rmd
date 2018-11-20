@@ -4,7 +4,7 @@ output:
     keep_tex: true
     fig_caption: true
     template: ~/workspace/cv/git/svm-latex-ms.tex
-title: "Homework 3"
+title: "Homework 5"
 author: 
   name: "Joyce Yu Cahoon"
 #abstract: "Application of sequential monte carlo (SMC) to the development of IM plausibility functions for the Nile."
@@ -47,7 +47,68 @@ library(quantmod)
 library(RiskPortfolios)
 ```
 
+# 7.7
+
+Show that the solution to 7.18 is given by 7.17. As a further generalization, what is the solution to the following problem: minimizing with respect the symmetric matrix $\V{S}$: 
+
+$$
+||\hat{\V{\Sigma}}_{\lambda} - \V{S}||^2_{F} \quad \text{such that} \quad \lambda_{\min}(\V{S}) \geq \delta
+$$
+
+We can show the solution to 7.18 is given by 7.17 since:
+$$
+\begin{aligned}
+||\hat{\V{\Sigma}}_{\lambda} - \V{S}||^2_{F} &= tr[(\hat{\V{\Sigma}}_{\lambda} - \V{S})(\hat{\V{\Sigma}}_{\lambda} - \V{S})^T] \\
+&= tr(\hat{\V{\Sigma}}\hat{\V{\Sigma}}^T) - tr(\hat{\V{\Sigma}} \V{S}^T) - tr(\V{S} \hat{\V{\Sigma}}^T) + tr(\V{S}\V{S}^T) \\
+&= tr(\hat{\V{\Sigma}} \hat{\V{\Sigma}}^T) - 2tr(\hat{\V{\Sigma}} \V{S}^T) +  tr(\V{S}\V{S}^T) 
+\end{aligned}
+$$
+Taking the derivation of this relative to $\hat{\V{\Sigma}}$ results in $2\hat{\V{\Sigma}} - 2\V{S} = 0$ which leads to 7.17 in which:
+$$
+\hat{\V{\Sigma}}^+ = \V{\Lambda}^T diag(\lambda_1^+, \ldots, \lambda_p^+) \V{\Lambda}
+$$
+
+# 7.10
+
+Let $\hat{\V{\Sigma}}$ be an estimated volatility matrix of a true volatility. Show that for any portfolio allocation $\V{w}$, the relative estimation error is bounded by:
+
+$$
+|\frac{\V{w}^T \hat{\V{\Sigma}} \V{w} }{ \V{w}^T \V{\Sigma} \V{w}}-1| \leq || \V{\Sigma} ^{-1/2} \hat{\V{\Sigma}} \V{\Sigma}^{-1/2} - \V{I}_p||
+$$
+As proven in 7.8: 
+$$
+tr[\hat{\V{\Sigma}} \V{\Sigma}^{-1} - \V{I}_p]^2 = || \V{\Sigma}^{-1/2} \hat{\V{\Sigma}} \V{\Sigma}^{-1/2} - \V{I}_p||_F^2
+$$
+Thus:
+$$
+tr[\hat{\V{\Sigma}} \V{\Sigma}^{-1} - \V{I}_p] = || \V{\Sigma}^{-1/2} \hat{\V{\Sigma}} \V{\Sigma}^{-1/2} - \V{I}_p||_F
+$$
+We can then simplify: 
+$$
+\begin{aligned}
+|\frac{\V{w}^T \hat{\V{\Sigma}} \V{w} }{ \V{w}^T \V{\Sigma} \V{w}}-1| &=
+|\frac{\V{w}^T(\hat{\V{\Sigma}} - \V{\Sigma}) \V{w}}{ \V{w}^T \V{\Sigma} \V{w} } |\\
+&= || \frac{\hat{\V{\Sigma}} - \V{\Sigma} }{\V{\Sigma}}|| \\
+&= ||\hat{\V{\Sigma}} \V{\Sigma}^{-1} - \V{I}_p || \\
+&\leq ||\hat{\V{\Sigma}} \V{\Sigma}^{-1} - \V{I}_p ||_F \\
+&\leq tr[\hat{\V{\Sigma}} \V{\Sigma}^{-1} - \V{I}_p] \\
+&= || \V{\Sigma}^{-1/2} \hat{\V{\Sigma}} \V{\Sigma}^{-1/2} - \V{I}_p||_F
+\end{aligned}
+$$
+
+# 7.11
+
+Suppose that we have 100 investable stocks, labeled as 1 through 100 and classified as "Consumer Non-durables", "Consumer durables", "Manufacturing", "Energy", "Business equipment", "Telecommunications", "Shops", "Health", "Utilities", and "Others". Let $w_1, \ldots, w_{100}$ be the portfolio weights. If the first 10 stocks are labeled as "Consumer Non-durables", the second 10 stock are in "Consumer durables", etc, write down the constraints of the portfolio. 
+
+1. the "health stocks" are no more than 15\% and "energy stocks" are no more than 30\%. 
+
+2. no exposure to Telecommunications. 
+3. exposure to "Consumer durables" but gross exposure is zero. 
+
+
 # 7.12 
+
+Let the study period be Jan 2001 to Jan 2015. Apply the sample covariance matrix, the FF 3 factor model, and the RiskMetrics with $\lambda = .94$ to obtain the time varying covariance matrix for Dell, Ford, GE, IBM, Intel, J&J, Merck, 3-mo Tres, and S&P500 at the beginning of each month. Optimize the portfolio and holds for the next 21 days. Compute the risk of such a portfolio and compare it with the equally weighted portfolio. 
 
 First, we get the data we need: 
 

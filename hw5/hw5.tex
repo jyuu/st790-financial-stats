@@ -89,7 +89,7 @@
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
   
-    \title{Homework 3  }
+    \title{Homework 5  }
   
   
   
@@ -134,7 +134,7 @@
 bookmarks=true,
 pdfauthor={Joyce Yu Cahoon ()},
 pdfkeywords = {},  
-pdftitle={Homework 3},
+pdftitle={Homework 5},
 colorlinks=true,
 citecolor=blue,
 urlcolor=blue,
@@ -207,7 +207,87 @@ pdfborder={0 0 0}}
 
 
 \noindent  \hypertarget{section}{%
-\section{7.12}\label{section}}
+\section{7.7}\label{section}}
+
+Show that the solution to 7.18 is given by 7.17. As a further
+generalization, what is the solution to the following problem:
+minimizing with respect the symmetric matrix \({\bm{{S}}}\):
+
+\[
+||\hat{{\bm{{\Sigma}}}}_{\lambda} - {\bm{{S}}}||^2_{F} \quad \text{such that} \quad \lambda_{\min}({\bm{{S}}}) \geq \delta
+\]
+
+We can show the solution to 7.18 is given by 7.17 since: \[
+\begin{aligned}
+||\hat{{\bm{{\Sigma}}}}_{\lambda} - {\bm{{S}}}||^2_{F} &= tr[(\hat{{\bm{{\Sigma}}}}_{\lambda} - {\bm{{S}}})(\hat{{\bm{{\Sigma}}}}_{\lambda} - {\bm{{S}}})^T] \\
+&= tr(\hat{{\bm{{\Sigma}}}}\hat{{\bm{{\Sigma}}}}^T) - tr(\hat{{\bm{{\Sigma}}}} {\bm{{S}}}^T) - tr({\bm{{S}}} \hat{{\bm{{\Sigma}}}}^T) + tr({\bm{{S}}}{\bm{{S}}}^T) \\
+&= tr(\hat{{\bm{{\Sigma}}}} \hat{{\bm{{\Sigma}}}}^T) - 2tr(\hat{{\bm{{\Sigma}}}} {\bm{{S}}}^T) +  tr({\bm{{S}}}{\bm{{S}}}^T) 
+\end{aligned}
+\] Taking the derivation of this relative to \(\hat{{\bm{{\Sigma}}}}\)
+results in \(2\hat{{\bm{{\Sigma}}}} - 2{\bm{{S}}} = 0\) which leads to
+7.17 in which: \[
+\hat{{\bm{{\Sigma}}}}^+ = {\bm{{\Lambda}}}^T diag(\lambda_1^+, \ldots, \lambda_p^+) {\bm{{\Lambda}}}
+\]
+
+\hypertarget{section-1}{%
+\section{7.10}\label{section-1}}
+
+Let \(\hat{{\bm{{\Sigma}}}}\) be an estimated volatility matrix of a
+true volatility. Show that for any portfolio allocation \({\bm{{w}}}\),
+the relative estimation error is bounded by:
+
+\[
+|\frac{{\bm{{w}}}^T \hat{{\bm{{\Sigma}}}} {\bm{{w}}} }{ {\bm{{w}}}^T {\bm{{\Sigma}}} {\bm{{w}}}}-1| \leq || {\bm{{\Sigma}}} ^{-1/2} \hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1/2} - {\bm{{I}}}_p||
+\] As proven in 7.8: \[
+tr[\hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1} - {\bm{{I}}}_p]^2 = || {\bm{{\Sigma}}}^{-1/2} \hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1/2} - {\bm{{I}}}_p||_F^2
+\] Thus: \[
+tr[\hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1} - {\bm{{I}}}_p] = || {\bm{{\Sigma}}}^{-1/2} \hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1/2} - {\bm{{I}}}_p||_F
+\] We can then simplify: \[
+\begin{aligned}
+|\frac{{\bm{{w}}}^T \hat{{\bm{{\Sigma}}}} {\bm{{w}}} }{ {\bm{{w}}}^T {\bm{{\Sigma}}} {\bm{{w}}}}-1| &=
+|\frac{{\bm{{w}}}^T(\hat{{\bm{{\Sigma}}}} - {\bm{{\Sigma}}}) {\bm{{w}}}}{ {\bm{{w}}}^T {\bm{{\Sigma}}} {\bm{{w}}} } |\\
+&= || \frac{\hat{{\bm{{\Sigma}}}} - {\bm{{\Sigma}}} }{{\bm{{\Sigma}}}}|| \\
+&= ||\hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1} - {\bm{{I}}}_p || \\
+&\leq ||\hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1} - {\bm{{I}}}_p ||_F \\
+&\leq tr[\hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1} - {\bm{{I}}}_p] \\
+&= || {\bm{{\Sigma}}}^{-1/2} \hat{{\bm{{\Sigma}}}} {\bm{{\Sigma}}}^{-1/2} - {\bm{{I}}}_p||_F
+\end{aligned}
+\]
+
+\hypertarget{section-2}{%
+\section{7.11}\label{section-2}}
+
+Suppose that we have 100 investable stocks, labeled as 1 through 100 and
+classified as ``Consumer Non-durables'', ``Consumer durables'',
+``Manufacturing'', ``Energy'', ``Business equipment'',
+``Telecommunications'', ``Shops'', ``Health'', ``Utilities'', and
+``Others''. Let \(w_1, \ldots, w_{100}\) be the portfolio weights. If
+the first 10 stocks are labeled as ``Consumer Non-durables'', the second
+10 stock are in ``Consumer durables'', etc, write down the constraints
+of the portfolio.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  the ``health stocks'' are no more than 15\% and ``energy stocks'' are
+  no more than 30\%.
+\item
+  no exposure to Telecommunications.
+\item
+  exposure to ``Consumer durables'' but gross exposure is zero.
+\end{enumerate}
+
+\hypertarget{section-3}{%
+\section{7.12}\label{section-3}}
+
+Let the study period be Jan 2001 to Jan 2015. Apply the sample
+covariance matrix, the FF 3 factor model, and the RiskMetrics with
+\(\lambda = .94\) to obtain the time varying covariance matrix for Dell,
+Ford, GE, IBM, Intel, J\&J, Merck, 3-mo Tres, and S\&P500 at the
+beginning of each month. Optimize the portfolio and holds for the next
+21 days. Compute the risk of such a portfolio and compare it with the
+equally weighted portfolio.
 
 First, we get the data we need:
 
