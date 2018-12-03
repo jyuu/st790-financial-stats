@@ -1,0 +1,138 @@
+---
+title: "ST790 Quantopian Final Project"
+author:  Presenter`:` Joyce Cahoon 
+output: beamer_presentation
+header-includes:
+- \usetheme{NCSUstatJL}
+- \usepackage[english]{babel}
+- \usepackage{inputenc}
+- \usepackage{times}
+- \usepackage[T1]{fontenc}
+- \usepackage{booktabs}
+- \usepackage{setspace}
+- \usepackage{bbm}
+- \usepackage{bm}
+- \usepackage{natbib}
+- \usepackage{inputenc}
+- \usepackage{graphicx}
+- \usepackage{ulem}
+- \graphicspath{{./figures/}}
+- \setbeamertemplate{itemize/enumerate subbody begin}{\vspace{.10cm}}
+- \setstretch{1.1} 
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(grid)
+library(gridExtra)
+library(png)
+```
+
+# Introduction 
+<!-- - give an overview on the motivation, the advantage and the disadvantage of your strategy.  -->
+We were tasked with constructing a cross-sectional, long-short US equity strategy on [Quantopian](https://www.quantopian.com/) that fulfilled the following constraints: 
+
+* Trade liquid stocks
+* Have no more than 5\% of capital invested in any one asset
+* Have no more than 10\% net dollar exposure
+* Achieve mean daily turnover between 5\% and 65\% over a 63-trading-day rolling window
+* Attain gross leverage between 0.8x and 1.1x
+* Have low correlation to the market
+* Have less than 20\% exposed to each of the 11 sectors as defined on Quantopian
+* Result in positive returns
+
+# Trading Strategy 
+
+1. Once a week, we choose a universe of liquid assets from $\texttt{QTradeableStocksUS}$ that pass the following filters: 
+    * It is not trading within 2 days of any earnings announcements as assets are generally more volatile within these dates. 
+    * It has not been announced as an acquisition target. To further reduce any possible volatility, we avoid acquisition targets as they often pose huge risk to quant strategies.
+    * We are able to calculate a 5 day moving average of the bull-minus-bear signal from the $\texttt{StockTwits}$ API.
+
+# Trading Strategy
+
+2. We build an alpha vector for the universe of liquid assets filtered. The alpha model we use is quite simple: we rank the assets by its bull-to-bear intensity, averaged over the past 5 days as evaluated from $\texttt{StockTwits}$, and find a set of new portfolio weights that maximizes the sum of each asset's weight times this alpha value. As a result, our routine effectively goes long on assets with high bullish signal and short on those with a high bearish signal.  
+
+# Trading Strategy
+
+3. Once a week, we calculate the portfolio that maximizes the alpha-weighted sum of our position sizes, subject to the following constraints:
+    * Our portfolio maintains a gross leverage of, or less than, 1.0x. 
+    * Our portfolio has no more than 5\% in any single asset. 
+    * Our portfolio does not pass mean daily turnover of 80\%. 
+
+# November Performance
+
+\begin{table}[ht]
+\small
+\centering
+\begin{tabular}{llr}
+  \hline
+ Metric & Our Result & Overall \\ 
+  \hline
+   rank & 105 & - \\ 
+   score & 0.338 & 0.35 \\ 
+   max\_beta\_to\_spy\_126day & 0.076 & 0.14 \\ 
+   max\_cumulative\_common\_returns & 0.009 & 0.04 \\ 
+   max\_leverage & 1.047 & 1.05 \\ 
+   max\_max\_drawdown & 0.000 & -0.00 \\ 
+   max\_net\_dollar\_exposure & 0.032 & 0.04 \\ 
+   max\_total\_returns & 0.025 & 0.14 \\ 
+   min\_total\_returns & -0.007 & -0.02 \\ 
+   max\_turnover & 0.905 & 1.07 \\ 
+   max\_volatility\_126day & 0.044 & 0.06 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+# Choice of the sentiment score 
+
+```{r, echo = FALSE, out.width="45%"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/ex1.png"))
+```
+
+```{r, echo = FALSE, out.width="45%"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/ex2.png"))
+```
+
+```{r, echo = FALSE, out.width="45%"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/ex3.png"))
+```
+
+# Choice of the sentiment score
+
+In addition to ease of implementation, the sentiment factor has: 
+
+1. **Predictive alpha** as measured by the mean information coefficient. 
+
+```{r, echo = FALSE, out.width="80%", fig.align="center"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/eval_meanic_and_cuml.png"))
+```
+
+<!-- Given this characteristic, we may want to build greater exposure to this factor since it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Nevertheless, the mean information coefficient across the time frame displayed still lingers around 0, suggesting the forecasting benefits provided by our sentiment factor may be no better than the results we get from randomly selecting our asset weights.  -->
+
+# Choice of the sentiment score
+
+2. **Low exposures** as quantified by the `perf_attrib` function in `pyfolio`. We benefit from the fact that our exposures do not vary much over time. 
+
+```{r, echo = FALSE, out.width="90%", fig.align="center"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/eval_exposure.png"))
+```
+
+# Related Work
+<!-- -  academic literatures or quantopian strategies. In either way, you should have clear citations and discussions on the connections and differences of your strategy compared with these work -->
+
+
+# Data and Variables
+- ve a clear description on the data and variables you used for backtest and quantopian contest respectively.
+
+# Trading Strategy Analysis 
+-  This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included. 
+
+# Backtest Analysis 
+-  You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
+
+# Performance Analysis
+- summary about your performance in the contest. Again you need to summarize the results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
+
+# Discussion 
+- You may revisit the advantage and disadvantage of your strategy and provide some insights for future exploration directions. 
+
+

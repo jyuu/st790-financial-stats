@@ -1,0 +1,31 @@
+- negative sentiment has a much larger effect on demand and supply than positive sentiment 
+- after extreme sentiment, prices become more mean reverting and spreads narrow 
+- use social media information to determine portfolio allocations 
+- with use of ML tools, now possible to process large amounts of text information about an asset, assign real time investor sentiment scores  based on NLP processing of texts 
+- what info can social media provide that is not available from things like newsfeeds?
+- do positive and negative sentiment have asymmetric effects on markets? 
+- their research shows that social media sentiment does exhibit correlation with liquidity measures ** 
+- negative social media sentiment has a larger effect on liquidity measures than positive sentiment 
+- A one percent increase in bearish sentiment has 2x as much impact on trading and liquidity than 1% increase in bullish sentiment 
+- by using pre-trading measures of sentiment, we find that news and social media data can be used to predict liquidity measures before the market opens 
+- by using pre-trading meausres of sentiment, we find that news and social media data can be used to predict liquidity measures BEFORE the market opens
+- our event study shows that highly abnormal social media sentiment (at least 3 std deviations above or below average) is preceded by very strong momentum and followed by mean-reverting returns ** 
+- high volumes of SM messages are followed by increases in liquidity and return to mean reversion **
+- use this to backtest an intraday mean reversion trading strategy that trades in 30 minute intervals 
+- every 30 minutes our strategy buys equities that had negative returns, more weight on stocks that had a lot of negative message volume
+- this strategy outperforms a benchmark mean reversion strategy that does NOT use social media data 
+- our main finding is that there is a much more demand for liquidity, less supply, when social media sentiment is negative than when it is positive
+- we use the insights from our regression and event studies to construct an intraday trading strategy that uses ST and TWTR
+- since a high volume of social media implies future mean reversion, lower spread ans high liquidity 
+- 
+
+R) Dredze 16 survey on social media sentiment on intraday liquidity 
+R) Bollen, Mao, Zeng 2011 twitter can be used to predict reutrns on Dow
+R) Mao 2011 Tiwtter and Google sentiment can predict daily stock market returns
+R) Zhang 2011 find the mass use of highly emotional language in financial tweets predicts a low return for stock indices... and increase in VIX 
+R) Karagozoglu and Fabozzi 2017 use social media sentiment to develop strategy the trades VIX futures 
+R) Da 2011 use google search volume data, predict short term increase in prices, followed by reversal  
+R) Ruiz 2012 built daily social networks for each stock based on retweets,  show that features of these social networks correlate to trade volume and returns for stocks 
+R) Sul (2014) tweets that are not retweeted have the most impact on future returns 
+R) Blankespoor (2017) show Associated Press use of robo journalism increased trading volume and liquidity... even through articles added NO information to the market, their introduction led investors to increase trading,  to respond to published news articles 
+R) 

@@ -6,7 +6,8 @@ library(xtable)
 
 # read --------------------------------------------------------------------
 #dat <- read_csv("final/daily-leaderboard-2018-11-02.csv") 
-dat <- read_csv("final/daily-leaderboard-2018-11-08.csv") 
+# dat <- read_csv("final/daily-leaderboard-2018-11-08.csv") 
+dat <- read_csv("final/daily-leaderboard-2018-11-30.csv") 
 
 dat_filtered <- dat %>%
   select(rank, 
@@ -28,7 +29,7 @@ all <- dat_filtered %>%
   tidyr::gather(Metric, Result)
 
 joyce <- dat_filtered %>% 
-  filter(rank == 64)  %>% 
+  filter(rank == 105)  %>% 
   mutate_at(vars(-name), funs(round(., 3))) %>%
   tidyr::gather(Metric, Result) %>%
   bind_cols(all[,2])
