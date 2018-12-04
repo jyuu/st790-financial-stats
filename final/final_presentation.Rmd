@@ -118,13 +118,38 @@ knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/eva
 
 # Related Work
 <!-- -  academic literatures or quantopian strategies. In either way, you should have clear citations and discussions on the connections and differences of your strategy compared with these work -->
+- *Cutler, Poterba, Summers 1989* First empirical study on the relationship between news coverage and stocks. Qualitative data did not help unaccompanied by macroeconomic indicators.
+- *DeLong 1990* Low sentiment produces downward pressure on price. 
+- *Antweiler and Frank 2004* Messages flagged as buy, sell or hold have some predictive power in trading volume and stock volatility. 
+- *Zhang, Fuehres, Gloor 2011* Emotional outbursts on Twitter is a good predictor for how the Dow performs the next day.
+- *Tetlock 2015* High pessimism expressed in WSJ predicts downward pressure on stock prices.
+- *Agrawal 2018* Extreme sentiment has an effect on liquidity. 
+<!-- # Data and Variables -->
+<!-- - ve a clear description on the data and variables you used for backtest and quantopian contest respectively. -->
 
+# $\texttt{StockTwits}$ Data 
 
-# Data and Variables
-- ve a clear description on the data and variables you used for backtest and quantopian contest respectively.
+Excerpt from Bergman (2017) on sentiment data points on Apple:
+
+```{r, echo = FALSE, out.width="45%", fig.align="center"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/apple_tech.png", "/home/joyce/workspace/st790-financial-stats/final/apple_sentiment"))
+```
+
+# $\texttt{StockTwits}$ Data 
+
+```{r, echo = FALSE, out.width="60%", fig.align="center"} 
+knitr::include_graphics(c("/home/joyce/workspace/st790-financial-stats/final/apple_datasummary.png"))
+```
+
+- *Positivity*: ratio of bullish tweets from all messages that have been classified.
+- *Activity*: total scanned messages over a 5-day average
+- *Bullish/Bearish Intensity*: Score on a 0-4 scale for bullishness/bearishness.
+- *Bull/Bear Scored*: Total count of bullish/bearish sentiment messages scored. 
 
 # Trading Strategy Analysis 
--  This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included. 
+
+Given that sentiment might be an early indicator for changes in financial assets, we 
+<!-- -  This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included.  -->
 
 # Backtest Analysis 
 -  You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
