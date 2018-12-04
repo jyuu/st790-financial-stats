@@ -18,7 +18,8 @@ header-includes:
 - \usepackage{ulem}
 - \graphicspath{{./figures/}}
 - \setbeamertemplate{itemize/enumerate subbody begin}{\vspace{.10cm}}
-- \setstretch{1.1} 
+- \setstretch{1.1}
+- \newcommand{\V}[1]{{\bm{#1}}}
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -96,38 +97,19 @@ knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/
 knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ex3.png"))
 ```
 
-# Choice of the sentiment score
-
-In addition to ease of implementation, the sentiment factor has: 
-
-1. **Predictive alpha** as measured by the mean information coefficient. 
-
-```{r, echo = FALSE, out.width="80%", fig.align="center"} 
-knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/eval_meanic_and_cuml.png"))
-```
-
-<!-- Given this characteristic, we may want to build greater exposure to this factor since it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Nevertheless, the mean information coefficient across the time frame displayed still lingers around 0, suggesting the forecasting benefits provided by our sentiment factor may be no better than the results we get from randomly selecting our asset weights.  -->
-
-# Choice of the sentiment score
-
-2. **Low exposures** as quantified by the `perf_attrib` function in `pyfolio`. We benefit from the fact that our exposures do not vary much over time. 
-
-```{r, echo = FALSE, out.width="90%", fig.align="center"} 
-knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/eval_exposure.png"))
-```
-
 # Related Work
 <!-- -  academic literatures or quantopian strategies. In either way, you should have clear citations and discussions on the connections and differences of your strategy compared with these work -->
 - *Cutler, Poterba, Summers 1989* First empirical study on the relationship between news coverage and stocks. Qualitative data did not help unaccompanied by macroeconomic indicators.
-- *DeLong 1990* Low sentiment produces downward pressure on price. 
+<!-- - *DeLong 1990* Low sentiment produces downward pressure on price.  -->
 - *Antweiler and Frank 2004* Messages flagged as buy, sell or hold have some predictive power in trading volume and stock volatility. 
+- *Tetlock 2007* High pessimism expressed in WSJ predicts downward pressure on stock prices.
+- *Mitra and Bartolomeo 2008* Factor models do not update quickly enough, but with news risk estimates are improved. 
+- *Leinweber and Sisk 2011* Further confirmation of the cliche "buy on the rumor, sell on the news". 
 - *Zhang, Fuehres, Gloor 2011* Emotional outbursts on Twitter is a good predictor for how the Dow performs the next day.
-- *Tetlock 2015* High pessimism expressed in WSJ predicts downward pressure on stock prices.
 - *Agrawal 2018* Extreme sentiment has an effect on liquidity. 
 <!-- # Data and Variables -->
 <!-- - ve a clear description on the data and variables you used for backtest and quantopian contest respectively. -->
-Mitra 2008
-Leinweber and Sisk (2010)
+
 
 # $\texttt{StockTwits}$ Data 
 
@@ -150,7 +132,132 @@ knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/
 
 # Trading Strategy Analysis 
 
-Given that sentiment might be an early indicator for changes in financial assets and has low correlation to traditional alpha factors: 
+Given that sentiment might be an early indicator for changes in financial assets and has low correlation to traditional alpha factors, we decide the weights of our portfolio by: 
+$$
+\max_{\V{w} \in \mathbb{R}^n} \V{\alpha}^T \V{w} \quad \text{subject to} \quad w_i \leq 0.05,\; \sum_i |w_i| \leq  1.00, \; \sum_i |w_i-w_{i-1}| \leq 0.80
+$$
+The weights must also sum to 1. 
+
+# Backtest Results
+
+Key metrics from our final backtest between 2016-09-30 and 2018-12-03: 
+
+\begin{table}[]
+\begin{tabular}{lllll}
+                                        &                             &                       &                                     &                             \\ \cline{1-2} \cline{4-5} 
+\multicolumn{1}{|l|}{Annual Return}     & \multicolumn{1}{l|}{1.7\%}  & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Skew}           & \multicolumn{1}{l|}{0.18}   \\ \cline{1-2} \cline{4-5} 
+\multicolumn{1}{|l|}{Cumulative Return} & \multicolumn{1}{l|}{3.6\%}  & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Gross Leverage} & \multicolumn{1}{l|}{0.99}   \\ \cline{1-2} \cline{4-5} 
+\multicolumn{1}{|l|}{Annual Volatility} & \multicolumn{1}{l|}{4.0\%}  & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Daily Turnover} & \multicolumn{1}{l|}{18.6\%} \\ \cline{1-2} \cline{4-5} 
+\multicolumn{1}{|l|}{Sharpe Ratio}      & \multicolumn{1}{l|}{0.43}   & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Alpha}          & \multicolumn{1}{l|}{0.01}   \\ \cline{1-2} \cline{4-5} 
+\multicolumn{1}{|l|}{Max Drawdown}      & \multicolumn{1}{l|}{-3.1\%} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Beta}           & \multicolumn{1}{l|}{0.02}   \\ \cline{1-2} \cline{4-5} 
+                                        &                             &                       &                                     &                            
+\end{tabular}
+\end{table}
+
+# Backtest Results
+
+Rolling beta suggests our strategy is market neutral. 
+
+```{r, echo = FALSE, out.width="80%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_rolling_beta"))
+```
+
+# Backtest Results 
+
+While our average Sharpe suggests low risk-adjusted return, we see that it is not consistent: 
+
+```{r, echo = FALSE, out.width="80%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_rolling_sharpe_ratio"))
+```
+
+# Backtest Results 
+
+We can see the Jun 2017 to Jan 2018 period in which our Sharpe ratio underperforms takes place when the market is particularly volatile: 
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_rolling_sharpe_ratio"))
+```
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_cumulative_return_vol"))
+```
+
+# Backtest Results 
+
+We can also compare it against our underwater plot to pinpoint where our strategy performed worse: 
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_rolling_sharpe_ratio"))
+```
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_underwater"))
+```
+
+# Backtest Results 
+
+While our drawdowns are minimal, there might be a seasonal component to when our drawdowns occur: 
+
+```{r, echo = FALSE, out.width="90%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_seasonal"))
+```
+
+# Backtest Results 
+
+We also benefit from the fact that we have relatively low exposures to each industry: 
+
+```{r, echo = FALSE, out.width="90%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_daily_factor_exposures"))
+```
+
+# Pyfolio 
+
+We can also observe this behavior via the `perf_attrib` function. Most of our returns appear to be explained by volatility risk. 
+
+```{r, echo = FALSE, out.width="90%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/eval_exposure.png"))
+```
+
+# Backtest Results 
+
+Lastly, we can see that our constraints are satisfied: 
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_leverage"))
+```
+
+```{r, echo = FALSE, out.width="70%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_dailyturnover"))
+```
+
+# Backtest Results 
+
+With no individual security having a significant impact on the portfolio: 
+
+```{r, echo = FALSE} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/ts_top_long", 
+                          "/Users/jcahoon/workspace/st790-financial-stats/final/ts_top_short"))
+```
+
+# Trading Strategy Analysis
+
+The problem with our approach is that we used backtesting as a tuning mechanism for our input parameters. Our strategy might have bad out-of-sample performance due to overfitting. We can also see this in our information coefficient, which is robust to extreme values. 
+
+$$
+IC = 1-\frac{6\sum_i d_i^2}{n(n^2-1)}
+$$
+
+# Trading Strategy Analysis 
+
+Lack of predictive alpha: 
+
+```{r, echo = FALSE, out.width="80%", fig.align="center"} 
+knitr::include_graphics(c("/Users/jcahoon/workspace/st790-financial-stats/final/eval_meanic_and_cuml.png"))
+```
+
+<!-- Given this characteristic, we may want to build greater exposure to this factor since it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Nevertheless, the mean information coefficient across the time frame displayed still lingers around 0, suggesting the forecasting benefits provided by our sentiment factor may be no better than the results we get from randomly selecting our asset weights.  -->
+
+
 
  <!-- Objective -->
  <!--    # --------- -->
@@ -166,30 +273,58 @@ Given that sentiment might be an early indicator for changes in financial assets
 
  <!--  Because Optimize is a declarative API, there's less manual order management to take care of, and the focus can instead be on alpha discovery and portfolio construction. You simply specify what you'd like your desired portfolio to be, either in the form of portfolio weights or alpha vectors, and Optimize handles placing the orders. -->
   
-  With the MaximizeAlpha objective, you now have the option of specifying alpha vectors as your ordering objectives, unlike the previous ordering methods which all needed a quantity of a specifically named stock.
+  <!-- With the MaximizeAlpha objective, you now have the option of specifying alpha vectors as your ordering objectives, unlike the previous ordering methods which all needed a quantity of a specifically named stock. -->
 <!-- -  This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included.  -->
 
-# Backtest 
 
-\begin{table}[]
-\begin{tabular}{lllll}
-                                        &                             &                       &                                     &                             \\ \cline{1-2} \cline{4-5} 
-\multicolumn{1}{|l|}{Annual Return}     & \multicolumn{1}{l|}{1.7\%}  & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Skew}           & \multicolumn{1}{l|}{0.18}   \\ \cline{1-2} \cline{4-5} 
-\multicolumn{1}{|l|}{Cumulative Return} & \multicolumn{1}{l|}{3.6\%}  & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Gross Leverage} & \multicolumn{1}{l|}{0.99}   \\ \cline{1-2} \cline{4-5} 
-\multicolumn{1}{|l|}{Annual Volatility} & \multicolumn{1}{l|}{4.0\%}  & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Daily Turnover} & \multicolumn{1}{l|}{18.6\%} \\ \cline{1-2} \cline{4-5} 
-\multicolumn{1}{|l|}{Sharpe Ratio}      & \multicolumn{1}{l|}{0.43}   & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Alpha}          & \multicolumn{1}{l|}{0.01}   \\ \cline{1-2} \cline{4-5} 
-\multicolumn{1}{|l|}{Max Drawdown}      & \multicolumn{1}{l|}{-3.1\%} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Beta}           & \multicolumn{1}{l|}{0.02}   \\ \cline{1-2} \cline{4-5} 
-                                        &                             &                       &                                     &                            
+<!-- # Backtest Analysis  -->
+<!-- -  You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge.  -->
+
+# Performance Analysis
+<!-- - summary about your performance in the contest. Again you need to summarize the results provided in quantopian. You should try to interpret and relate your results with domain knowledge.  -->
+\begin{table}[ht]
+\small
+\centering
+\begin{tabular}{llr}
+  \hline
+ Metric & Our Result & Overall \\ 
+  \hline
+   rank & 105 & - \\ 
+   score & 0.338 & 0.35 \\ 
+   max\_beta\_to\_spy\_126day & 0.076 & 0.14 \\ 
+   max\_cumulative\_common\_returns & 0.009 & 0.04 \\ 
+   max\_leverage & 1.047 & 1.05 \\ 
+   max\_max\_drawdown & 0.000 & -0.00 \\ 
+   max\_net\_dollar\_exposure & 0.032 & 0.04 \\ 
+   max\_total\_returns & 0.025 & 0.14 \\ 
+   min\_total\_returns & -0.007 & -0.02 \\ 
+   max\_turnover & 0.905 & 1.07 \\ 
+   max\_volatility\_126day & 0.044 & 0.06 \\ 
+   \hline
 \end{tabular}
 \end{table}
 
-# Backtest Analysis 
--  You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
-
-# Performance Analysis
-- summary about your performance in the contest. Again you need to summarize the results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
-
 # Discussion 
-- You may revisit the advantage and disadvantage of your strategy and provide some insights for future exploration directions. 
+<!-- - You may revisit the advantage and disadvantage of your strategy and provide some insights for future exploration directions.  -->
+1. Narrow the universe of equities where sentiment is utilized by the factors in the Fama-French, or the Carhart four factor model (market risk, market cap, book-to-price, and momentum) 
+2. Take a hedge out by buying VIX/VXV to cancel out the risk from the volatility factor. 
+3. Design our own sentiment index that removes classification from robo cashtag users. 
 
+# References
 
+\tiny
+Argarwal, Shreyash, et al. "Momentum, Mean-Reversion and Social Media: Evidence from StockTwits and Twitter." (2018).
+
+Antweiler, Werner, and Murray Z. Frank. "Is all that talk just noise? The information content of internet stock message boards." (2004).
+
+Cutler, David M., James M. Poterba, and Lawrence H. Summers. "What moves stock prices?." (1988).
+
+Leinweber, David and Sisk, Jacob, "Event Driven Trading and the 'New News'." (2011). 
+
+Mitra, Leela R. and Mitra, Gautam and di Bartolomeo, Dan, "Equity Portfolio Risk Estimation Using Market Information and Sentiment." (2008). 
+
+Tetlock, Paul C. "Giving content to investor sentiment: The role of media in the stock market." (2007).
+
+Quantopian. https://www.quantopian.com/lectures.
+
+Zhang, Xue, Hauke Fuehres, and Peter A. Gloor. "Predicting stock market indicators through twitter 'I hope it is not as bad as I fear'." (2011).
