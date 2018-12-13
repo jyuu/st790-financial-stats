@@ -1,0 +1,124 @@
+---
+output: 
+  pdf_document:
+    keep_tex: true
+    latex_engine: "pdflatex"
+    fig_caption: true
+    toc: true
+    # template: ~/workspace/cv/git/svm-latex-ms.tex
+title: "The information content of StockTwits"
+author: "Joyce Cahoon"
+abstract: "blah"
+# bibliography: /home/joyce/workspace/metar/ref2.bib
+bibliography: /Users/jcahoon/workspace/st790-financial-stats/paper/st790ref.bib
+# csl: /home/joyce/workspace/metar/meeting/prelim_ideas/asa.csl
+csl: /Users/jcahoon/workspace/metar/meeting/prelim_ideas/asa.csl
+link-citations: true
+fontsize: 11
+#indent: true
+header-includes:
+- \usepackage{placeins}
+- \usepackage{chngcntr}
+- \usepackage{multicol}
+- \usepackage{setspace}
+- \usepackage{mathrsfs}
+- \usepackage{amsthm}
+- \usepackage{graphicx}
+- \usepackage{booktabs}
+- \usepackage{multirow}
+- \usepackage{subcaption}
+- \usepackage{sidecap}
+- \usepackage{mathtools}
+- \usepackage{bm}
+- \usepackage[linesnumbered,algoruled,boxed,lined,commentsnumbered]{algorithm2e}
+- \SetKwInput{KwInput}{Input}
+- \SetKwInput{KwOutput}{Output}
+- \onehalfspacing
+- \setlength{\parskip}{8.0pt}
+- \newcommand{\V}[1]{{\bm{#1}}}
+- \newcommand{\Real}{\mathbb{R}}
+- \newcommand{\Exp}{\mathbb{E}}
+- \newcommand{\ubar}[1]{\underbar{$#1$}}
+- \newcommand{\obar}{\overline}
+- \newtheorem{walley781}{Theorem}
+- \usepackage[symbols,nogroupskip,nonumberlist,automake]{glossaries-extra}
+- \makeglossaries
+- \newglossaryentry{T}{name=\ensuremath{T}, description={Number of topics},type=symbols}
+# - \newglossaryentry{}{name=\ensuremath{\}, description={},type=symbols}
+--- 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+library(png)
+library(ggthemes)
+```
+
+\newpage 
+
+# Introduction 
+<!-- start with an introduction section to give an overview on the motivation, the advantage and the disadvantage of your strategy.  -->
+
+As fund managers, we were tasked with constructing a cross-sectional, long-short US equity strategy on [Quantopian](https://www.quantopian.com/). There were not many explicit constraints on the specific strategy we utilized, but it must pass the following criteria: (i) trade liquid stocks, (ii) have no more than 5\% of capital invested in any one asset, (iii) have no more than 10\% net dollar exposure, (iv) achieve mean daily turnover between 5\% and 65\% over a 63-trading-day rolling window, (v) attain gross leverage between 0.8x and 1.1x, (vi) have low correlation to the market, (vii) have less than 20\% exposed to each of the 11 sectors as defined on Quantopian, and (viii) result in positive returns. While the last return criteria was not a constraint we included in our optimization, we did design our algorithm with the rest of the seven criteria in mind [@q].
+
+The algorithm I eventually submitted was one based purely on the information content from StockTwits; more specifically, the 5-day moving average of the bull minus bear intensity associated with each tradable stock. I rely on this metric to assign each stock's weight in our portfolio, subject to certain constraints so that our algorithm passes `Quantopian`'s criteria to remain in competition. Given the large literature around news and social media sentiment in driving volatility and liquidity in the market, I wanted to examine the power of this unstructured data in driving returns. 
+
+My algorithm's performance over the November period resulted in a final rank of 105 out of 261 submissions and a total score of 0.338. Its performance is mediocre at best and can be attributed the fact that the tuning mechanism for my input parameters was based only on the backtest returns. Given the constraints and the length of moving window for our sentiment metric was overfit to a backtest window between 2016 and 2018, my strategy may have experienced bad out-of-sample performance. 
+
+Nevertheless, this strategy did perform within the top 40\% of all submissions, which corroborates many findings in literature that social media has some effect on driving prices. The majority of literature suggests extreme sentiment or extreme volume of online media content tends to drive the positive and negative returns, and since the month of November can be characterized by extreme volatility this may explain the high performance of our sentiment strategy. As expected, for December, the peaks in the VIX, however, have subsided given greater clarity around the Trump administration's trade policy and Fed's decision to stop raising rates, and our strategy fell a few ranks to 113 with a score of 0.316 [@cramer2018].
+
+# Related Work
+<!-- Section 2 should be summary of related work. They can be from academic literatures or quantopian strategies. In either way, you should have clear citations and discussions on the connections and differences of your strategy compared with these work.( -->
+
+The first paper that explored the relationship of text---unstructured data---in driving stock prices was @cutler1988's "What moves stock prices?" At the time, the field of computational linguistics was yet sophisticated enough to process large collections of text, so Cutler and his team examined 49 major events discussed in the NY Times Business desk and assessed the market changes associated with each event. Unfortunately, given the number of significant market moves associated with days where nothing significant was released, they were unable to identify any link between market moves and news, possibly stymeing explorations into this realm [@cutler1988]. Fortunately, another empirical study emerged in 1998, which leveraged information on online message boards instead, identifying strong correlations between stocks with high message volume and high market valuation. In fact, Wysocki found message volume forecasted not only abnormal stock returns the next day, but also trading volume the next day [@wysocki1998]. 
+
+Yet, given these results and similar findings from papers like @bagnoli1999, @antweiler2004, corroborating the link between prices and social chatter, a number of studies find the opposite. @tumarkin2001 found no relationship for equities in the tech sector and the message activity on RagingBull.com. @das2007 developed a classifier for investor sentiment from message board text, yet were unable to to demonstrate its ability to forecast returns. @dewally2003 found recommendations exchanged on sites like `misc.invest.stocks` and `alt.invest.penny-stocks` had no effect on the return characteristics of the stocks under discussion. 
+
+Despite these mixed claims, newer studies arose reporting the opposite. In fact, the seminar paper by @tetlock2007 concluded high negative sentiment in the Wall Street Journal predicted temporary downward price pressure, echoing the thoughts expressed in @wysocki1998 that extreme news affects market movement. Additional works that build on Tetlock's use of news as a fundamental factor is @mitra2008, @leinweber2011 and @fang2009, each providing evidence for the predictive value in social chatter. In this class, we were also directed to the paper by @agrawal2019, which provides a great overview of literature that further promotes the use of Twitter and StockTwits to predict stock volatility, liquidity and return.
+
+# Our Reliance on StockTwits 
+<!-- Section 3 on Data and Variables should have a clear description on the data and variables you used for backtest and quantopian contest respectively. -->
+
+Key to my strategy is the output from the `bull_minus_bear` API call as it is this signal that is fed into the optimization function and this result that determines the order size of each asset. While there is no disclosure on the natural language processing model that calculates the bull and bear intensity of each social media message, it is helpful to look at examples and understand the nature of posts that ultimately determine the power of our sentiment measure as shown in Figure \ref{StockT}. 
+
+```{r, echo = FALSE, fig.align = "center", out.width="80%",fig.cap = "\\label{StockT}Four examples of messages posted on StockTwits. The bull and bear indicator is provided by the user, and all stock tickers that follow the cashtag is associated with this indicator. The bull and bear intensity is then computed by a proprietary StockTwits algorithm based on the content within each individual post."}
+img1 <-  rasterGrob(as.raster(readPNG("/Users/jcahoon/workspace/st790-financial-stats/final/ex1.png")), interpolate = FALSE)
+img2 <-  rasterGrob(as.raster(readPNG("/Users/jcahoon/workspace/st790-financial-stats/final/ex2.png")), interpolate = FALSE)
+img3 <-  rasterGrob(as.raster(readPNG("/Users/jcahoon/workspace/st790-financial-stats/final/ex3.png")), interpolate = FALSE)
+img4 <-  rasterGrob(as.raster(readPNG("/Users/jcahoon/workspace/st790-financial-stats/final/ex4.png")), interpolate = FALSE)
+
+grid.arrange(img1, img2, img3, img4, ncol = 2)
+```
+
+
+
+While we do not have exact clarity on the natural language processing engine that calculates the bullish intensity and bearish intensity of a stock, we do know how the `bull_minus_bear` signal arises; traders attached either a bull emoji or a bear emoji to any message they release on the `StockTwits` platform as well as a ticker symbol that identifies which asset is under discussion. While traders attached a clear label to the asset of interest, `StockTwits` also has an in-house proprietary algorithm that processes some of the language in the message to ascribe an intensity level of the bull or bear indicator. Messages across the `StockTwits` platform is thus aggregated to arrive a sentiment score that is a function of subtracting the bearish intensity from the bullish intensity result. 
+
+In addition to the ease of implementation, we chose to rely on the sentiment factor as it seems to have some good characteristics, namely: 
+
+1. **Predictive alpha** We calculated the mean information coefficient using the built-in function in `alphalens` and found our sentiment signal matches the direction of actual asset returns. As shown in the top-left of the figure below, we only get the full exposure of this factor 5 days after this signal becomes available. In fact, prior to 5 trading days, it appears the signal hurts us, in that its forecast is negative. Counterintuitively, after we cross 5 trading days, it appears our sentiment factor gains more predictive power. This is further corroborated in the top-right graph in that returns are highest when the signal is delayed by four days. Given this characteristic, we may want to build greater exposure to this factor since it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Nevertheless, the mean information coefficient across the time frame displayed still lingers around 0, suggesting the forecasting benefits provided by our sentiment factor may be no better than the results we get from randomly selecting our asset weights. 
+
+2. **Low exposures** We quantified the exposures via the `perf_attrib` function in `pyfolio`. As shown in the bottom-left, our sentiment factor appears to have relatively low exposures throughout, with most of the returns from volatility risk. However, there does appear to be persistent exposure to value and short term reversal, in that it is shifted to the left of zero; and persistent exposure to size and momentum, in that it is shifted to the right of zero. Ideally, we would choose a factor that doesn't display this skew, but the skew does not appear too large. We also benefit from the fact that the width of each of our box and whisker plots are not that wide, so our exposures do not vary much over time. Yet, this analysis was conducted only over the available sentiment signal in 2018, so there may be other extended periods prior to 2018 in which our factor over or underperforms. Given what we have here, we may want to identify asset classes to include in our portfolio that would offset the exposure risks identified above. 
+
+Unfortunately, when we examine our exposures through cumulative returns and volatility, we find that our sentiment factor may not be as strong as we desired. As shown by the left bar graph (bottom-right), most of our returns are obtained from exposure to common risk factors, and, as shown in the right bar graph, are in fact driven by these common risk factors. Ideally, we would like to strip away the contribution from these common risk factors as portfolio performance from this exposure can easily be replicated from ETFs or other easy, cost-effective methods.  
+
+
+# Trading Strategy 
+Section 4 should be Trading-Strategy Analysis. This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included. 
+
+# Backtest Analysis
+Section 5 should be about the Backtest Analysis. You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
+
+# Performance 
+Section 6 should be a summary about your performance in the contest. Again you need to summarize the results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
+
+# Discussion 
+Section 7 will be the conclusion and discussion. You may revisit the advantage and disadvantage of your strategy and provide some insights for future exploration directions. 
+In the appendix, all your programing codes should be attached. 
+
+# Python Code 
+
+# References
