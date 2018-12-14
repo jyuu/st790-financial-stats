@@ -82,7 +82,7 @@ Despite these mixed claims, newer studies arose reporting the opposite. In fact,
 # Our Reliance on StockTwits 
 <!-- Section 3 on Data and Variables should have a clear description on the data and variables you used for backtest and quantopian contest respectively. -->
 
-Key to my strategy is the output from the `bull_minus_bear` API call as it is this signal that is fed into the optimization function and this result that determines the order size of each asset. While there is no disclosure on the natural language processing model that calculates the bull and bear intensity of each social media message, it is helpful to look at examples and understand the nature of posts that ultimately determine the power of our sentiment measure as shown in Figure \ref{StockT}. 
+Key to my strategy is the output from the `bull_minus_bear` API call as it is this signal that is fed into the optimization function and this result that determines the order size of each asset. While there is no disclosure on the natural language processing model that calculates the bull and bear intensity of each social media message, it is helpful to look at examples and understand the nature of posts that ultimately determine the power of our sentiment measure. 
 
 ```{r, echo = FALSE, fig.align = "center", out.width="80%",fig.cap = "\\label{StockT}Four examples of messages posted on StockTwits. The bull and bear indicator is provided by the user, and all stock tickers that follow the cashtag is associated with this indicator. The bull and bear intensity is then computed by a proprietary StockTwits algorithm based on the content within each individual post."}
 img1 <-  rasterGrob(as.raster(readPNG("/Users/jcahoon/workspace/st790-financial-stats/final/ex1.png")), interpolate = FALSE)
@@ -93,32 +93,228 @@ img4 <-  rasterGrob(as.raster(readPNG("/Users/jcahoon/workspace/st790-financial-
 grid.arrange(img1, img2, img3, img4, ncol = 2)
 ```
 
+As shown in Figure \ref{StockT}, there is a lot of noise in StockTwit data as users each utilize the platform for different reasons and do not have to disclose any of their personal stakes in the equities they support. Logically, users that are more influential should have a higher impact in driving overall investor sentiment, and thus driving prices, but there currently is no easily available API call that provides such a weighting. Moreover, these influencers change over time, increasing the difficulty around identifying posts that might contain more information than another. As a result, relying on the aggregate bullish and bearish intensity averaged daily across all the tagged StockTwits messages is the best surrogate we have to understanding community sentiment over a specific stock. 
 
+From the free version of StockTwits API, we have access to the following daily metrics for 10,214 liquid US equities: 
 
-While we do not have exact clarity on the natural language processing engine that calculates the bullish intensity and bearish intensity of a stock, we do know how the `bull_minus_bear` signal arises; traders attached either a bull emoji or a bear emoji to any message they release on the `StockTwits` platform as well as a ticker symbol that identifies which asset is under discussion. While traders attached a clear label to the asset of interest, `StockTwits` also has an in-house proprietary algorithm that processes some of the language in the message to ascribe an intensity level of the bull or bear indicator. Messages across the `StockTwits` platform is thus aggregated to arrive a sentiment score that is a function of subtracting the bearish intensity from the bullish intensity result. 
+* _Bull and bear scored messages_: Total number of daily messages that were labeled either "Bullish" or "Bearish" on the StockTwits platform by the user 
+* _Bull or bear intensity_: Daily score between 0 and 4 aggregated across processed messages. 0 means no bull or bear sentiment was detected by StockTwits proprietary trading algorithm. 4 means very high bull or bear sentiment was detected.
+* _Total scanned_: Total number of daily messages that appear on StockTwits platform that has at least one cashtag associated with it. The message is included in this count whether it is labeled or unlabeled and can be processed by the StockTwist language algorithm or not. 
 
-In addition to the ease of implementation, we chose to rely on the sentiment factor as it seems to have some good characteristics, namely: 
+Since disagreement among message content has been shown to be associated with greater liquidity and volatility, we focus on the metric of `bull_minus_bear` as it is one proxy for disagreement among investor opinion [@antweiler2004]. Given the overall trend in this metric is not stable as we will see in Figure \ref{tops}, a moving average is taken. Eventually, I settle on 5-day moving average as the mean information coefficient (IC) is positive that this point. The IC is often chosen as a means to evaluate whether a factor is predictive of returns as it is more robust to outliers and normality assumptions, allowing one to better tease out whether two series move in concert or not. It is thus calculated from the rank of each data pair in each series as $IC = 1- 6\sum_i d_i^2 / n(n^2-1)$ where $d_i$ represents the difference in ranks. As shown in the top left of Figure \ref{IC}, prior to 5 trading days, our sentiment signal hurts our returns in that its forecast is negative, but after 5 trading days, we gain some predictive power. This is further corroborated in the top right plot in that returns are highest when the signal is delayed by four days. 
 
-1. **Predictive alpha** We calculated the mean information coefficient using the built-in function in `alphalens` and found our sentiment signal matches the direction of actual asset returns. As shown in the top-left of the figure below, we only get the full exposure of this factor 5 days after this signal becomes available. In fact, prior to 5 trading days, it appears the signal hurts us, in that its forecast is negative. Counterintuitively, after we cross 5 trading days, it appears our sentiment factor gains more predictive power. This is further corroborated in the top-right graph in that returns are highest when the signal is delayed by four days. Given this characteristic, we may want to build greater exposure to this factor since it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Nevertheless, the mean information coefficient across the time frame displayed still lingers around 0, suggesting the forecasting benefits provided by our sentiment factor may be no better than the results we get from randomly selecting our asset weights. 
+Given the IC results, we may want to build greater exposure to this factor as it still benefits us after 10 trading days. We can also leverage the positive effects of this factor by increasing our turnover constraints as it appears it does not hurt our portfolio to keep in there for a longer period of time. Another asset is that our sentiment factor has relatively low exposures throughout, with most of the returns from volatility risk. However, there does appear to be persistent exposure to value and short term reversal, in that it is shifted to the left of zero; and persistent exposure to size and momentum, in that it is shifted to the right of zero. Ideally, we would choose a factor that doesn't display this skew, but the skew does not appear too large. We benefit from the fact that the width of each of our box and whisker plots are not that wide, so our exposures do not vary much over time. 
 
-2. **Low exposures** We quantified the exposures via the `perf_attrib` function in `pyfolio`. As shown in the bottom-left, our sentiment factor appears to have relatively low exposures throughout, with most of the returns from volatility risk. However, there does appear to be persistent exposure to value and short term reversal, in that it is shifted to the left of zero; and persistent exposure to size and momentum, in that it is shifted to the right of zero. Ideally, we would choose a factor that doesn't display this skew, but the skew does not appear too large. We also benefit from the fact that the width of each of our box and whisker plots are not that wide, so our exposures do not vary much over time. Yet, this analysis was conducted only over the available sentiment signal in 2018, so there may be other extended periods prior to 2018 in which our factor over or underperforms. Given what we have here, we may want to identify asset classes to include in our portfolio that would offset the exposure risks identified above. 
+Unfortunately, when we examine our exposures through cumulative returns and volatility, we find that our sentiment factor may not be as strong as we desired. As shown by the left bar graph in Figure \ref{IC}, most of our returns are obtained from exposure to common risk factors, and, as shown in the right bar graph, are in fact driven by these common risk factors. Ideally, we would like to strip away the contribution from these common risk factors as portfolio performance from this exposure can easily be replicated from ETFs or other easy, cost-effective methods. We can also work to identify asset classes to include in our portfolio that would offset the exposure risks identified above. Nevertheless, this factor analysis was conducted only over the sentiment signal in 2018, so there may be other extended periods prior to 2018 in which our factor over or underperforms. 
 
-Unfortunately, when we examine our exposures through cumulative returns and volatility, we find that our sentiment factor may not be as strong as we desired. As shown by the left bar graph (bottom-right), most of our returns are obtained from exposure to common risk factors, and, as shown in the right bar graph, are in fact driven by these common risk factors. Ideally, we would like to strip away the contribution from these common risk factors as portfolio performance from this exposure can easily be replicated from ETFs or other easy, cost-effective methods.  
-
+```{r, echo = FALSE, fig.align = "center", out.width="80%",fig.cap = "\\label{IC}Examination of (top-right) information coefficient averaged over all possible asset returns, (top-left) cumulative returns when factor is delayed, (bottom-left) risk exposures, and (bottom-right) cumulative returns and volatility."}
+knitr::include_graphics("~/workspace/st790-financial-stats/final/download2.png")
+```
 
 # Trading Strategy 
-Section 4 should be Trading-Strategy Analysis. This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included. 
+<!-- Section 4 should be Trading-Strategy Analysis. This is the major section of the whole paper. You should give a detailed description of your procedure. I prefer you use mathematical/statistical modeling/formulas as much as you can, instead of sampling quoting  generic functions' description provided in quantopian. Discussions about why your method will not violate contest constraints, why your method performs good (or not so good) should be included.  -->
+
+Given the ease of implementation and some good alpha characteristics as delineated above, we chose to rely on the sentiment factor in our trading strategy. Continuous backtesting was run to derive the constraint parameters as outlined: 
+
+1. Once a week, we choose a universe of liquid assets from $\texttt{QTradeableStocksUS}$ that pass the following filters: 
+    * It is not trading within 2 days of any earnings announcements as assets are generally more volatile within these dates. 
+    * It has not been announced as an acquisition target. To further reduce any possible volatility, we avoid acquisition targets as they often pose huge risk to quant strategies. 
+    * We are able to calculate a 5 day moving average of the bull-minus-bear signal from the $\texttt{StockTwits}$ API.
+2. Every day, we build an alpha vector for the universe of liquid assets filtered from our step above. The alpha model we use is quite simple: we rank the assets by its bull-to-bear intensity, averaged over the past 5 days as evaluated from StockTwits, and find a set of new portfolio weights that maximizes the sum of each asset's weight times this alpha value. Our objective defined in `MaximizeAlpha` is thus simply a function of this sentiment datastream as we believe this ranking is similar to expected returns of each asset. As a result, our routine effectively goes long on assets with high bullish signal and short on those with a high bearish signal.
+3. Once a week, we calculate the portfolio that maximizes the alpha-weighted sum of our position sizes, subject to the following constraints:
+    * Our portfolio maintains a gross leverage of, or less than, 1.0x. 
+    * Our portfolio has no more than 5\% in any single asset. 
+    * Our portfolio does not pass mean daily turnover of 80\%. 
+
+Our simple strategy can thus be summarized as follows: 
+
+$$
+\max_{\V{w} \in \mathbb{R}^n} \V{\alpha}^T \V{w} \quad \text{subject to} \quad |w_i| \leq 0.05,\; \sum_i |w_i| \leq  1.00, \; \sum_i |w_i-w_{i-1}| \leq 0.80, \; \sum_i w_i = 1
+$$
+\noindent where $\V{w}$ represents the weights attached to each asset in our optimal portfolio.
 
 # Backtest Analysis
-Section 5 should be about the Backtest Analysis. You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
+<!-- Section 5 should be about the Backtest Analysis. You need to summarize details on the backtesting procedure and results provided in quantopian. You should try to interpret and relate your results with domain knowledge.  -->
+
+
 
 # Performance 
-Section 6 should be a summary about your performance in the contest. Again you need to summarize the results provided in quantopian. You should try to interpret and relate your results with domain knowledge. 
+<!-- Section 6 should be a summary about your performance in the contest. Again you need to summarize the results provided in quantopian. You should try to interpret and relate your results with domain knowledge.  -->
+
+we achieve the following leaderboard results at the end of our one-month trading period from November $1^{st}$ to November $30^{th}$: 
 
 # Discussion 
 Section 7 will be the conclusion and discussion. You may revisit the advantage and disadvantage of your strategy and provide some insights for future exploration directions. 
 In the appendix, all your programing codes should be attached. 
 
-# Python Code 
+
+# Appendix 
+
+## Quantopian Submission
+
+```{python, eval = FALSE}
+# Import Algorithm API functions
+from quantopian.algorithm import (
+    attach_pipeline,
+    pipeline_output,
+    order_optimal_portfolio,
+)
+
+# Import Optimize API module
+import quantopian.optimize as opt
+
+# Pipeline imports
+from quantopian.pipeline import Pipeline
+from quantopian.pipeline.data.psychsignal import stocktwits
+from quantopian.pipeline.factors import SimpleMovingAverage
+
+
+# Import built-in universe and Risk API method
+from quantopian.pipeline.filters import QTradableStocksUS
+from quantopian.pipeline.experimental import risk_loading_pipeline
+
+# Get event data 
+from quantopian.pipeline.factors.eventvestor import (
+    BusinessDaysUntilNextEarnings,
+    BusinessDaysSincePreviousEarnings,
+)
+from quantopian.pipeline.filters.eventvestor import IsAnnouncedAcqTarget
+from quantopian.pipeline.factors import BusinessDaysSincePreviousEvent
+
+def initialize(context):
+    # Constraint parameters
+    context.max_leverage = 1.0
+    context.max_pos_size = 0.05
+    context.max_turnover = 0.8
+
+    # Attach data pipelines
+    attach_pipeline(
+        make_pipeline(),
+        'data_pipe'
+    )
+    attach_pipeline(
+        risk_loading_pipeline(),
+        'risk_pipe'
+    )
+
+    # Schedule rebalance function
+    schedule_function(
+        rebalance,
+        date_rules.week_start(),
+        time_rules.market_open(),
+    )
+
+
+def before_trading_start(context, data):
+    # Get pipeline outputs and
+    # store them in context
+    context.output = pipeline_output('data_pipe')
+
+    context.risk_factor_betas = pipeline_output('risk_pipe')
+
+
+# Pipeline definition
+def make_pipeline():
+   
+    not_near_earnings = ~((BusinessDaysUntilNextEarnings() <= 2) |
+      (BusinessDaysSincePreviousEarnings() <= 2)) 
+    
+    not_acq_tar = ~IsAnnouncedAcqTarget()
+    
+    universe = (
+        QTradableStocksUS()
+        & not_near_earnings
+        & not_acq_tar
+    )
+    
+    sentiment_score = SimpleMovingAverage(
+        inputs=[stocktwits.bull_minus_bear],
+        window_length=5,
+        mask=universe
+    )
+
+    return Pipeline(
+        columns={
+            'sentiment_score': sentiment_score,
+        },
+        screen=sentiment_score.notnull()
+    )
+
+
+def rebalance(context, data):
+    # Create MaximizeAlpha objective using
+    # sentiment_score data from pipeline output
+    objective = opt.MaximizeAlpha(
+      context.output.sentiment_score
+    )
+
+    # Create position size constraint
+    constrain_pos_size = opt.PositionConcentration.with_equal_bounds(
+        -context.max_pos_size,
+        context.max_pos_size
+    )
+
+    # Constrain target portfolio's leverage
+    max_leverage = opt.MaxGrossExposure(context.max_leverage)
+
+    # Constrain portfolio turnover
+    max_turnover = opt.MaxTurnover(context.max_turnover)
+
+    # Constrain target portfolio's risk exposure
+    factor_risk_constraints = opt.experimental.RiskModelExposure(
+        context.risk_factor_betas,
+        version=opt.Newest
+    )
+
+    # Rebalance portfolio using objective
+    # and list of constraints
+    order_optimal_portfolio(
+        objective=objective,
+        constraints=[
+            max_leverage,
+            constrain_pos_size,
+            max_turnover,
+            factor_risk_constraints,
+        ]
+    )
+```
+
+## Data Exploration 
+```{python, eval = FALSE}
+# import the free sample of the dataset
+from quantopian.interactive.data.psychsignal import stocktwits_free  as dataset
+
+# or if you want to import the full dataset, use:
+# from quantopian.interactive.data.psychsignal import stocktwits
+
+# import data operations
+from odo import odo
+# import other libraries we will use
+import pandas as pd
+import matplotlib.pyplot as plt
+import datetime as dt
+
+# Filtering for an equity (here SSD)
+
+aapl = dataset[dataset.sid == 11386] # aapl is 24
+aapl_df = odo(aapl.sort('asof_date'), pd.DataFrame)
+aapl_df2 = aapl_df[aapl_df.asof_date >= dt.date(2016, 9, 30)]
+plt.plot(aapl_df2.asof_date, aapl_df2.bull_scored_messages, marker='.', linestyle='None', color='r')
+plt.plot(aapl_df2.asof_date, aapl_df2.bull_scored_messages.rolling(window = 5, center = False).mean())
+plt.plot(aapl_df2.asof_date, aapl_df2.bear_scored_messages, marker='.', linestyle='None', color='y')
+plt.plot(aapl_df2.asof_date, aapl_df2.bear_scored_messages.rolling(window = 5, center = False).mean(), color='g')
+
+plt.xlabel("As Of Date (asof_date)")
+plt.ylabel("Count of Scored Messages")
+plt.title("Count of Scored Messages for SSD")
+plt.legend(["Bull Messages - Single Day", "5 Day Rolling Average for Bull Count", "Bear Messages - Single Day", "5 Day Rolling Average for Bear Count"], loc=2)
+
+plt.plot(aapl_df2.asof_date, aapl_df2.bull_minus_bear, marker='.', linestyle='None', color='r')
+plt.plot(aapl_df2.asof_date, aapl_df2.bull_minus_bear.rolling(window = 5, center = False).mean())
+plt.xlabel("As Of Date (asof_date)")
+plt.ylabel("Bull Minus Bear Intensity")
+plt.title("Bull Minus Bear Intensity for SSD")
+plt.legend(["Metric - Single Day", "5 Day Rolling Average"], loc=2)
+```
 
 # References

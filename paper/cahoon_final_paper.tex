@@ -29,6 +29,46 @@
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -234,8 +274,7 @@ this result that determines the order size of each asset. While there is
 no disclosure on the natural language processing model that calculates
 the bull and bear intensity of each social media message, it is helpful
 to look at examples and understand the nature of posts that ultimately
-determine the power of our sentiment measure as shown in Figure
-\ref{StockT}.
+determine the power of our sentiment measure.
 
 \begin{figure}
 
@@ -246,98 +285,167 @@ determine the power of our sentiment measure as shown in Figure
 \caption{\label{StockT}Four examples of messages posted on StockTwits. The bull and bear indicator is provided by the user, and all stock tickers that follow the cashtag is associated with this indicator. The bull and bear intensity is then computed by a proprietary StockTwits algorithm based on the content within each individual post.}\label{fig:unnamed-chunk-2}
 \end{figure}
 
-While we do not have exact clarity on the natural language processing
-engine that calculates the bullish intensity and bearish intensity of a
-stock, we do know how the \texttt{bull\_minus\_bear} signal arises;
-traders attached either a bull emoji or a bear emoji to any message they
-release on the \texttt{StockTwits} platform as well as a ticker symbol
-that identifies which asset is under discussion. While traders attached
-a clear label to the asset of interest, \texttt{StockTwits} also has an
-in-house proprietary algorithm that processes some of the language in
-the message to ascribe an intensity level of the bull or bear indicator.
-Messages across the \texttt{StockTwits} platform is thus aggregated to
-arrive a sentiment score that is a function of subtracting the bearish
-intensity from the bullish intensity result.
+As shown in Figure \ref{StockT}, there is a lot of noise in StockTwit
+data as users each utilize the platform for different reasons and do not
+have to disclose any of their personal stakes in the equities they
+support. Logically, users that are more influential should have a higher
+impact in driving overall investor sentiment, and thus driving prices,
+but there currently is no easily available API call that provides such a
+weighting. Moreover, these influencers change over time, increasing the
+difficulty around identifying posts that might contain more information
+than another. As a result, relying on the aggregate bullish and bearish
+intensity averaged daily across all the tagged StockTwits messages is
+the best surrogate we have to understanding community sentiment over a
+specific stock.
 
-In addition to the ease of implementation, we chose to rely on the
-sentiment factor as it seems to have some good characteristics, namely:
+From the free version of StockTwits API, we have access to the following
+daily metrics for 10,214 liquid US equities:
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\begin{itemize}
+\tightlist
 \item
-  \textbf{Predictive alpha} We calculated the mean information
-  coefficient using the built-in function in \texttt{alphalens} and
-  found our sentiment signal matches the direction of actual asset
-  returns. As shown in the top-left of the figure below, we only get the
-  full exposure of this factor 5 days after this signal becomes
-  available. In fact, prior to 5 trading days, it appears the signal
-  hurts us, in that its forecast is negative. Counterintuitively, after
-  we cross 5 trading days, it appears our sentiment factor gains more
-  predictive power. This is further corroborated in the top-right graph
-  in that returns are highest when the signal is delayed by four days.
-  Given this characteristic, we may want to build greater exposure to
-  this factor since it still benefits us after 10 trading days. We can
-  also leverage the positive effects of this factor by increasing our
-  turnover constraints as it appears it does not hurt our portfolio to
-  keep in there for a longer period of time. Nevertheless, the mean
-  information coefficient across the time frame displayed still lingers
-  around 0, suggesting the forecasting benefits provided by our
-  sentiment factor may be no better than the results we get from
-  randomly selecting our asset weights.
+  \emph{Bull and bear scored messages}: Total number of daily messages
+  that were labeled either ``Bullish'' or ``Bearish'' on the StockTwits
+  platform by the user
 \item
-  \textbf{Low exposures} We quantified the exposures via the
-  \texttt{perf\_attrib} function in \texttt{pyfolio}. As shown in the
-  bottom-left, our sentiment factor appears to have relatively low
-  exposures throughout, with most of the returns from volatility risk.
-  However, there does appear to be persistent exposure to value and
-  short term reversal, in that it is shifted to the left of zero; and
-  persistent exposure to size and momentum, in that it is shifted to the
-  right of zero. Ideally, we would choose a factor that doesn't display
-  this skew, but the skew does not appear too large. We also benefit
-  from the fact that the width of each of our box and whisker plots are
-  not that wide, so our exposures do not vary much over time. Yet, this
-  analysis was conducted only over the available sentiment signal in
-  2018, so there may be other extended periods prior to 2018 in which
-  our factor over or underperforms. Given what we have here, we may want
-  to identify asset classes to include in our portfolio that would
-  offset the exposure risks identified above.
-\end{enumerate}
+  \emph{Bull or bear intensity}: Daily score between 0 and 4 aggregated
+  across processed messages. 0 means no bull or bear sentiment was
+  detected by StockTwits proprietary trading algorithm. 4 means very
+  high bull or bear sentiment was detected.
+\item
+  \emph{Total scanned}: Total number of daily messages that appear on
+  StockTwits platform that has at least one cashtag associated with it.
+  The message is included in this count whether it is labeled or
+  unlabeled and can be processed by the StockTwist language algorithm or
+  not.
+\end{itemize}
+
+Since disagreement among message content has been shown to be associated
+with greater liquidity and volatility, we focus on the metric of
+\texttt{bull\_minus\_bear} as it is one proxy for disagreement among
+investor opinion (Antweiler and Frank
+\protect\hyperlink{ref-antweiler2004}{2004}). Given the overall trend in
+this metric is not stable as we will see in Figure \ref{tops}, a moving
+average is taken. Eventually, I settle on 5-day moving average as the
+mean information coefficient (IC) is positive that this point. The IC is
+often chosen as a means to evaluate whether a factor is predictive of
+returns as it is more robust to outliers and normality assumptions,
+allowing one to better tease out whether two series move in concert or
+not. It is thus calculated from the rank of each data pair in each
+series as \(IC = 1- 6\sum_i d_i^2 / n(n^2-1)\) where \(d_i\) represents
+the difference in ranks. As shown in the top left of Figure \ref{IC},
+prior to 5 trading days, our sentiment signal hurts our returns in that
+its forecast is negative, but after 5 trading days, we gain some
+predictive power. This is further corroborated in the top right plot in
+that returns are highest when the signal is delayed by four days.
+
+Given the IC results, we may want to build greater exposure to this
+factor as it still benefits us after 10 trading days. We can also
+leverage the positive effects of this factor by increasing our turnover
+constraints as it appears it does not hurt our portfolio to keep in
+there for a longer period of time. Another asset is that our sentiment
+factor has relatively low exposures throughout, with most of the returns
+from volatility risk. However, there does appear to be persistent
+exposure to value and short term reversal, in that it is shifted to the
+left of zero; and persistent exposure to size and momentum, in that it
+is shifted to the right of zero. Ideally, we would choose a factor that
+doesn't display this skew, but the skew does not appear too large. We
+benefit from the fact that the width of each of our box and whisker
+plots are not that wide, so our exposures do not vary much over time.
 
 Unfortunately, when we examine our exposures through cumulative returns
 and volatility, we find that our sentiment factor may not be as strong
-as we desired. As shown by the left bar graph (bottom-right), most of
-our returns are obtained from exposure to common risk factors, and, as
-shown in the right bar graph, are in fact driven by these common risk
+as we desired. As shown by the left bar graph in Figure \ref{IC}, most
+of our returns are obtained from exposure to common risk factors, and,
+as shown in the right bar graph, are in fact driven by these common risk
 factors. Ideally, we would like to strip away the contribution from
 these common risk factors as portfolio performance from this exposure
 can easily be replicated from ETFs or other easy, cost-effective
-methods.
+methods. We can also work to identify asset classes to include in our
+portfolio that would offset the exposure risks identified above.
+Nevertheless, this factor analysis was conducted only over the sentiment
+signal in 2018, so there may be other extended periods prior to 2018 in
+which our factor over or underperforms.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{~/workspace/st790-financial-stats/final/download2} 
+
+}
+
+\caption{\label{IC}Examination of (top-right) information coefficient averaged over all possible asset returns, (top-left) cumulative returns when factor is delayed, (bottom-left) risk exposures, and (bottom-right) cumulative returns and volatility.}\label{fig:unnamed-chunk-3}
+\end{figure}
 
 \hypertarget{trading-strategy}{%
 \section{Trading Strategy}\label{trading-strategy}}
 
-Section 4 should be~Trading-Strategy Analysis. This is the major section
-of the whole paper. You should give a detailed description of
-your~procedure. I prefer you use mathematical/statistical
-modeling/formulas as much as you can, instead of sampling quoting
-~generic functions' description provided in quantopian. Discussions
-about why your method will not violate contest constraints, why your
-method performs good (or not so good) should be included.~
+Given the ease of implementation and some good alpha characteristics as
+delineated above, we chose to rely on the sentiment factor in our
+trading strategy. Continuous backtesting was run to derive the
+constraint parameters as outlined:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Once a week, we choose a universe of liquid assets from
+  \(\texttt{QTradeableStocksUS}\) that pass the following filters:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    It is not trading within 2 days of any earnings announcements as
+    assets are generally more volatile within these dates.
+  \item
+    It has not been announced as an acquisition target. To further
+    reduce any possible volatility, we avoid acquisition targets as they
+    often pose huge risk to quant strategies.
+  \item
+    We are able to calculate a 5 day moving average of the
+    bull-minus-bear signal from the \(\texttt{StockTwits}\) API.
+  \end{itemize}
+\item
+  Every day, we build an alpha vector for the universe of liquid assets
+  filtered from our step above. The alpha model we use is quite simple:
+  we rank the assets by its bull-to-bear intensity, averaged over the
+  past 5 days as evaluated from StockTwits, and find a set of new
+  portfolio weights that maximizes the sum of each asset's weight times
+  this alpha value. Our objective defined in \texttt{MaximizeAlpha} is
+  thus simply a function of this sentiment datastream as we believe this
+  ranking is similar to expected returns of each asset. As a result, our
+  routine effectively goes long on assets with high bullish signal and
+  short on those with a high bearish signal.
+\item
+  Once a week, we calculate the portfolio that maximizes the
+  alpha-weighted sum of our position sizes, subject to the following
+  constraints:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Our portfolio maintains a gross leverage of, or less than, 1.0x.
+  \item
+    Our portfolio has no more than 5\% in any single asset.
+  \item
+    Our portfolio does not pass mean daily turnover of 80\%.
+  \end{itemize}
+\end{enumerate}
+
+Our simple strategy can thus be summarized as follows:
+
+\[
+\max_{{\bm{w}} \in \mathbb{R}^n} {\bm{\alpha}}^T {\bm{w}} \quad \text{subject to} \quad |w_i| \leq 0.05,\; \sum_i |w_i| \leq  1.00, \; \sum_i |w_i-w_{i-1}| \leq 0.80, \; \sum_i w_i = 1
+\] \noindent where \({\bm{w}}\) represents the weights attached to each
+asset in our optimal portfolio.
 
 \hypertarget{backtest-analysis}{%
 \section{Backtest Analysis}\label{backtest-analysis}}
 
-Section 5 should be about the Backtest Analysis. You need to summarize
-details on the backtesting procedure and results provided in quantopian.
-You should try to interpret and relate your results with domain
-knowledge.~
-
 \hypertarget{performance}{%
 \section{Performance}\label{performance}}
 
-Section 6 should be a summary about your performance in the contest.
-Again you~need to summarize the results provided in quantopian. You
-should try to interpret and relate your results with domain knowledge.~
+we achieve the following leaderboard results at the end of our one-month
+trading period from November \(1^{st}\) to November \(30^{th}\):
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -347,8 +455,155 @@ advantage and disadvantage of your strategy and provide some insights
 for future exploration directions.~ In the appendix, all your programing
 codes should be attached.~
 
-\hypertarget{python-code}{%
-\section{Python Code}\label{python-code}}
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+\hypertarget{quantopian-submission}{%
+\subsection{Quantopian Submission}\label{quantopian-submission}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Import Algorithm API functions}
+\ImportTok{from}\NormalTok{ quantopian.algorithm }\ImportTok{import}\NormalTok{ (}
+\NormalTok{    attach_pipeline,}
+\NormalTok{    pipeline_output,}
+\NormalTok{    order_optimal_portfolio,}
+\NormalTok{)}
+\CommentTok{# Import Optimize API module}
+\ImportTok{import}\NormalTok{ quantopian.optimize }\ImportTok{as}\NormalTok{ opt}
+\CommentTok{# Pipeline imports}
+\ImportTok{from}\NormalTok{ quantopian.pipeline }\ImportTok{import}\NormalTok{ Pipeline}
+\ImportTok{from}\NormalTok{ quantopian.pipeline.data.psychsignal }\ImportTok{import}\NormalTok{ stocktwits}
+\ImportTok{from}\NormalTok{ quantopian.pipeline.factors }\ImportTok{import}\NormalTok{ SimpleMovingAverage}
+\CommentTok{# Import built-in universe and Risk API method}
+\ImportTok{from}\NormalTok{ quantopian.pipeline.filters }\ImportTok{import}\NormalTok{ QTradableStocksUS}
+\ImportTok{from}\NormalTok{ quantopian.pipeline.experimental }\ImportTok{import}\NormalTok{ risk_loading_pipeline}
+\CommentTok{# Get event data }
+\ImportTok{from}\NormalTok{ quantopian.pipeline.factors.eventvestor }\ImportTok{import}\NormalTok{ (}
+\NormalTok{    BusinessDaysUntilNextEarnings,}
+\NormalTok{    BusinessDaysSincePreviousEarnings,}
+\NormalTok{)}
+\ImportTok{from}\NormalTok{ quantopian.pipeline.filters.eventvestor }\ImportTok{import}\NormalTok{ IsAnnouncedAcqTarget}
+\ImportTok{from}\NormalTok{ quantopian.pipeline.factors }\ImportTok{import}\NormalTok{ BusinessDaysSincePreviousEvent}
+\KeywordTok{def}\NormalTok{ initialize(context):}
+    \CommentTok{# Constraint parameters}
+\NormalTok{    context.max_leverage }\OperatorTok{=} \FloatTok{1.0}
+\NormalTok{    context.max_pos_size }\OperatorTok{=} \FloatTok{0.05}
+\NormalTok{    context.max_turnover }\OperatorTok{=} \FloatTok{0.8}
+    \CommentTok{# Attach data pipelines}
+\NormalTok{    attach_pipeline(}
+\NormalTok{        make_pipeline(),}
+        \StringTok{'data_pipe'}
+\NormalTok{    )}
+\NormalTok{    attach_pipeline(}
+\NormalTok{        risk_loading_pipeline(),}
+        \StringTok{'risk_pipe'}
+\NormalTok{    )}
+    \CommentTok{# Schedule rebalance function}
+\NormalTok{    schedule_function(}
+\NormalTok{        rebalance,}
+\NormalTok{        date_rules.week_start(),}
+\NormalTok{        time_rules.market_open(),}
+\NormalTok{    )}
+\KeywordTok{def}\NormalTok{ before_trading_start(context, data):}
+    \CommentTok{# Get pipeline outputs and}
+    \CommentTok{# store them in context}
+\NormalTok{    context.output }\OperatorTok{=}\NormalTok{ pipeline_output(}\StringTok{'data_pipe'}\NormalTok{)}
+\NormalTok{    context.risk_factor_betas }\OperatorTok{=}\NormalTok{ pipeline_output(}\StringTok{'risk_pipe'}\NormalTok{)}
+\CommentTok{# Pipeline definition}
+\KeywordTok{def}\NormalTok{ make_pipeline():}
+   
+\NormalTok{    not_near_earnings }\OperatorTok{=} \OperatorTok{~}\NormalTok{((BusinessDaysUntilNextEarnings() }\OperatorTok{<=} \DecValTok{2}\NormalTok{) }\OperatorTok{|}
+\NormalTok{      (BusinessDaysSincePreviousEarnings() }\OperatorTok{<=} \DecValTok{2}\NormalTok{)) }
+    
+\NormalTok{    not_acq_tar }\OperatorTok{=} \OperatorTok{~}\NormalTok{IsAnnouncedAcqTarget()}
+    
+\NormalTok{    universe }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{        QTradableStocksUS()}
+        \OperatorTok{&}\NormalTok{ not_near_earnings}
+        \OperatorTok{&}\NormalTok{ not_acq_tar}
+\NormalTok{    )}
+    
+\NormalTok{    sentiment_score }\OperatorTok{=}\NormalTok{ SimpleMovingAverage(}
+\NormalTok{        inputs}\OperatorTok{=}\NormalTok{[stocktwits.bull_minus_bear],}
+\NormalTok{        window_length}\OperatorTok{=}\DecValTok{5}\NormalTok{,}
+\NormalTok{        mask}\OperatorTok{=}\NormalTok{universe}
+\NormalTok{    )}
+    \ControlFlowTok{return}\NormalTok{ Pipeline(}
+\NormalTok{        columns}\OperatorTok{=}\NormalTok{\{}
+            \StringTok{'sentiment_score'}\NormalTok{: sentiment_score,}
+\NormalTok{        \},}
+\NormalTok{        screen}\OperatorTok{=}\NormalTok{sentiment_score.notnull()}
+\NormalTok{    )}
+\KeywordTok{def}\NormalTok{ rebalance(context, data):}
+    \CommentTok{# Create MaximizeAlpha objective using}
+    \CommentTok{# sentiment_score data from pipeline output}
+\NormalTok{    objective }\OperatorTok{=}\NormalTok{ opt.MaximizeAlpha(}
+\NormalTok{      context.output.sentiment_score}
+\NormalTok{    )}
+    \CommentTok{# Create position size constraint}
+\NormalTok{    constrain_pos_size }\OperatorTok{=}\NormalTok{ opt.PositionConcentration.with_equal_bounds(}
+        \OperatorTok{-}\NormalTok{context.max_pos_size,}
+\NormalTok{        context.max_pos_size}
+\NormalTok{    )}
+    \CommentTok{# Constrain target portfolio's leverage}
+\NormalTok{    max_leverage }\OperatorTok{=}\NormalTok{ opt.MaxGrossExposure(context.max_leverage)}
+    \CommentTok{# Constrain portfolio turnover}
+\NormalTok{    max_turnover }\OperatorTok{=}\NormalTok{ opt.MaxTurnover(context.max_turnover)}
+    \CommentTok{# Constrain target portfolio's risk exposure}
+\NormalTok{    factor_risk_constraints }\OperatorTok{=}\NormalTok{ opt.experimental.RiskModelExposure(}
+\NormalTok{        context.risk_factor_betas,}
+\NormalTok{        version}\OperatorTok{=}\NormalTok{opt.Newest}
+\NormalTok{    )}
+    \CommentTok{# Rebalance portfolio using objective}
+    \CommentTok{# and list of constraints}
+\NormalTok{    order_optimal_portfolio(}
+\NormalTok{        objective}\OperatorTok{=}\NormalTok{objective,}
+\NormalTok{        constraints}\OperatorTok{=}\NormalTok{[}
+\NormalTok{            max_leverage,}
+\NormalTok{            constrain_pos_size,}
+\NormalTok{            max_turnover,}
+\NormalTok{            factor_risk_constraints,}
+\NormalTok{        ]}
+\NormalTok{    )}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-exploration}{%
+\subsection{Data Exploration}\label{data-exploration}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# import the free sample of the dataset}
+\ImportTok{from}\NormalTok{ quantopian.interactive.data.psychsignal }\ImportTok{import}\NormalTok{ stocktwits_free  }\ImportTok{as}\NormalTok{ dataset}
+\CommentTok{# or if you want to import the full dataset, use:}
+\CommentTok{# from quantopian.interactive.data.psychsignal import stocktwits}
+\CommentTok{# import data operations}
+\ImportTok{from}\NormalTok{ odo }\ImportTok{import}\NormalTok{ odo}
+\CommentTok{# import other libraries we will use}
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ datetime }\ImportTok{as}\NormalTok{ dt}
+\CommentTok{# Filtering for an equity (here SSD)}
+\NormalTok{aapl }\OperatorTok{=}\NormalTok{ dataset[dataset.sid }\OperatorTok{==} \DecValTok{11386}\NormalTok{] }\CommentTok{# aapl is 24}
+\NormalTok{aapl_df }\OperatorTok{=}\NormalTok{ odo(aapl.sort(}\StringTok{'asof_date'}\NormalTok{), pd.DataFrame)}
+\NormalTok{aapl_df2 }\OperatorTok{=}\NormalTok{ aapl_df[aapl_df.asof_date }\OperatorTok{>=}\NormalTok{ dt.date(}\DecValTok{2016}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{30}\NormalTok{)]}
+\NormalTok{plt.plot(aapl_df2.asof_date, aapl_df2.bull_scored_messages, marker}\OperatorTok{=}\StringTok{'.'}\NormalTok{, linestyle}\OperatorTok{=}\StringTok{'None'}\NormalTok{, color}\OperatorTok{=}\StringTok{'r'}\NormalTok{)}
+\NormalTok{plt.plot(aapl_df2.asof_date, aapl_df2.bull_scored_messages.rolling(window }\OperatorTok{=} \DecValTok{5}\NormalTok{, center }\OperatorTok{=} \VariableTok{False}\NormalTok{).mean())}
+\NormalTok{plt.plot(aapl_df2.asof_date, aapl_df2.bear_scored_messages, marker}\OperatorTok{=}\StringTok{'.'}\NormalTok{, linestyle}\OperatorTok{=}\StringTok{'None'}\NormalTok{, color}\OperatorTok{=}\StringTok{'y'}\NormalTok{)}
+\NormalTok{plt.plot(aapl_df2.asof_date, aapl_df2.bear_scored_messages.rolling(window }\OperatorTok{=} \DecValTok{5}\NormalTok{, center }\OperatorTok{=} \VariableTok{False}\NormalTok{).mean(), color}\OperatorTok{=}\StringTok{'g'}\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{"As Of Date (asof_date)"}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{"Count of Scored Messages"}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{"Count of Scored Messages for SSD"}\NormalTok{)}
+\NormalTok{plt.legend([}\StringTok{"Bull Messages - Single Day"}\NormalTok{, }\StringTok{"5 Day Rolling Average for Bull Count"}\NormalTok{, }\StringTok{"Bear Messages - Single Day"}\NormalTok{, }\StringTok{"5 Day Rolling Average for Bear Count"}\NormalTok{], loc}\OperatorTok{=}\DecValTok{2}\NormalTok{)}
+\NormalTok{plt.plot(aapl_df2.asof_date, aapl_df2.bull_minus_bear, marker}\OperatorTok{=}\StringTok{'.'}\NormalTok{, linestyle}\OperatorTok{=}\StringTok{'None'}\NormalTok{, color}\OperatorTok{=}\StringTok{'r'}\NormalTok{)}
+\NormalTok{plt.plot(aapl_df2.asof_date, aapl_df2.bull_minus_bear.rolling(window }\OperatorTok{=} \DecValTok{5}\NormalTok{, center }\OperatorTok{=} \VariableTok{False}\NormalTok{).mean())}
+\NormalTok{plt.xlabel(}\StringTok{"As Of Date (asof_date)"}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{"Bull Minus Bear Intensity"}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{"Bull Minus Bear Intensity for SSD"}\NormalTok{)}
+\NormalTok{plt.legend([}\StringTok{"Metric - Single Day"}\NormalTok{, }\StringTok{"5 Day Rolling Average"}\NormalTok{], loc}\OperatorTok{=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
